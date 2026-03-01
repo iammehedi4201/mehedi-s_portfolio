@@ -69,7 +69,9 @@ async function seed() {
     await Project.deleteMany({});
     
     console.log("Seeding demo projects...");
-    await Project.insertMany(demoProjects);
+    // add order based on array index so seeded projects have consistent order
+    const docs = demoProjects.map((p, i) => ({ ...p, order: i }));
+    await Project.insertMany(docs);
     
     console.log("Seeding completed successfully!");
     process.exit(0);

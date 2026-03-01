@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       filter.category = category;
     }
 
-    const projects = await Project.find(filter).sort({ createdAt: -1 }).lean();
+    const projects = await Project.find(filter).sort({ order: 1 }).lean();
 
     return NextResponse.json({ success: true, data: projects });
   } catch (error) {
@@ -52,6 +52,13 @@ export async function POST(req: NextRequest) {
         { success: false, error: parsed.error.errors[0].message },
         { status: 400 }
       );
+    }
+
+    // If order is not provided, append to the end by using max(order) + 1
+    if (parsed.data.order == null) {
+      const maxDoc = await Project.findOne({}).sort({ order: -1 }).select("order").lean();
+      const maxOrder = maxDoc && typeof (maxDoc as any).order === "number" ? (maxDoc as any).order : -1;
+      parsed.data.order = maxOrder + 1;
     }
 
     const project = await Project.create(parsed.data);

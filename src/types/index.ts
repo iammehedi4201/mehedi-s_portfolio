@@ -9,6 +9,7 @@ export interface Project {
   category: string;
   liveUrl: string;
   githubUrl: string;
+  order: number;
   status: "published" | "draft";
   deletedAt: string | null;
   createdAt: string;

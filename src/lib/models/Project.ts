@@ -8,6 +8,7 @@ export interface IProject extends Document {
   category: string;
   liveUrl: string;
   githubUrl: string;
+  order: number;
   status: "published" | "draft";
   deletedAt: Date | null;
   createdAt: Date;
@@ -23,6 +24,7 @@ const ProjectSchema = new Schema<IProject>(
     category: { type: String, required: true },
     liveUrl: { type: String, default: "" },
     githubUrl: { type: String, default: "" },
+    order: { type: Number, default: 0 },
     status: { type: String, enum: ["published", "draft"], default: "draft" },
     deletedAt: { type: Date, default: null },
   },

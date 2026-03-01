@@ -33,3 +33,11 @@ export function useDeleteProject() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard-projects"] }),
   });
 }
+
+export function useUpdateProjectOrder() {
+  return useMutation({
+    mutationFn: (projectIds: string[]) => projectService.updateOrder(projectIds),
+    // No onSuccess invalidation — the caller handles optimistic updates
+    // and error rollback manually to avoid refetch-overwrite race conditions
+  });
+}

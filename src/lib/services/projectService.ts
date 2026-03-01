@@ -52,4 +52,14 @@ export const projectService = {
     const json: ApiResponse = await res.json();
     if (!json.success) throw new Error(json.error || "Failed to delete");
   },
+
+  async updateOrder(projectIds: string[]): Promise<void> {
+    const res = await fetch(`${BASE}/dashboard/projects`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ projectIds }),
+    });
+    const json: ApiResponse = await res.json();
+    if (!json.success) throw new Error(json.error || "Failed to update project order");
+  },
 };
