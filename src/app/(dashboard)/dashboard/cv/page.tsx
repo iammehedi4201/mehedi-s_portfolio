@@ -232,7 +232,7 @@ export default function CVManagerPage() {
                               <FileText className="h-3.5 w-3.5" />
                             </div>
                             <span className="text-[11px] font-medium text-[#1A73E8] truncate max-w-[120px]">
-                              Mehedi's CV.pdf
+                              Mehedi&apos;s CV.pdf
                             </span>
                           </div>
                           <div className="bg-[#1A73E8]/10 hover:bg-[#1A73E8]/20 p-1.5 rounded-full text-[#1A73E8] transition-colors cursor-pointer">

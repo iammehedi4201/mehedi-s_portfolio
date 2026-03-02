@@ -1,39 +1,38 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-/** Merge Tailwind classes with clsx */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
-/** Format date to readable string */
-export function formatDate(date: string | Date): string {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
+export function timeAgo(input: string | number | Date) {
+  const date = new Date(input)
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
 
-/** Time ago string */
-export function timeAgo(date: string | Date): string {
-  const now = new Date();
-  const past = new Date(date);
-  const diffMs = now.getTime() - past.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHr = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHr / 24);
+  if (Number.isNaN(seconds)) return ""
+  if (seconds < 5) return "just now"
 
-  if (diffSec < 60) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHr < 24) return `${diffHr}h ago`;
-  if (diffDay < 7) return `${diffDay}d ago`;
-  return formatDate(date);
-}
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" })
 
-/** Truncate string */
-export function truncate(str: string, length: number): string {
-  if (str.length <= length) return str;
-  return str.slice(0, length) + "...";
+  const intervals: [string, number][] = [
+    ["year", 31536000],
+    ["month", 2592000],
+    ["week", 604800],
+    ["day", 86400],
+    ["hour", 3600],
+    ["minute", 60],
+    ["second", 1],
+  ]
+
+  for (const [unit, value] of intervals) {
+    const amount = Math.floor(seconds / value)
+    if (amount >= 1) {
+      // Intl.RelativeTimeFormat expects negative values for past
+      // so we negate the amount.
+      // @ts-ignore
+      return rtf.format(-amount, unit)
+    }
+  }
+
+  return ""
 }

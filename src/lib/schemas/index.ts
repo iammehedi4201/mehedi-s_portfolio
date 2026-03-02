@@ -2,16 +2,16 @@ import { z } from "zod";
 
 /* ===== Project Schemas ===== */
 export const createProjectSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
-  description: z.string().min(1, "Description is required").max(2000),
-  thumbnail: z.string().url("Must be a valid URL").or(z.literal("")),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  thumbnail: z.string().url("Thumbnail must be a valid URL"),
   techStack: z.array(z.string()).min(1, "At least one tech is required"),
   category: z.string().min(1, "Category is required"),
-  liveUrl: z.string().url("Must be a valid URL").or(z.literal("")),
-  githubUrl: z.string().url("Must be a valid URL").or(z.literal("")),
+  liveUrl: z.string().url("Live URL must be valid"),
+  githubUrl: z.string().url("GitHub URL must be valid"),
   status: z.enum(["published", "draft"]).default("draft"),
+  order: z.number().int().min(0).optional(), // ✅ add this
 });
-
 export const updateProjectSchema = createProjectSchema.partial();
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
