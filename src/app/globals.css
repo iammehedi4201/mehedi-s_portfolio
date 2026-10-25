@@ -99,8 +99,8 @@
     --brand-on-primary: #0A0A0F;
     --brand-subtle: #2B220C;
 
-    --color-success: #10B981;
-    --color-success-subtle: #064E3B;
+    --color-success: #34D399;
+    --color-success-subtle: rgba(52, 211, 153, 0.12);
     --color-info: #38BDF8;
     --color-info-subtle: #082F49;
     --color-warning: #FB923C;

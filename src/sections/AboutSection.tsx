@@ -53,21 +53,22 @@ export default function AboutSection() {
           transition={{ duration: 0.5 }}
           className="lg:col-span-5 space-y-8"
         >
-          {/* Avatar (Real Headshot, Solid Border, No Gradients) */}
-          <div className="relative w-56 h-64 sm:w-60 sm:h-72 mx-auto lg:mx-0 cursor-default">
-            <div className="w-full h-full rounded-2xl bg-surface border-2 border-brand-primary p-2 shadow-card overflow-hidden">
-              <div className="w-full h-full rounded-xl overflow-hidden border border-border-subtle bg-surface-subtle relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/mehedi.jpg"
-                  alt="Mehedi Hasan - Software Engineer"
-                  className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+          {/* Avatar (New Headshot with Ambient Framing) */}
+          <div className="relative w-64 h-64 sm:w-72 sm:h-72 mx-auto lg:mx-0 cursor-default">
+            <div className="w-full h-full rounded-3xl bg-surface border border-border-subtle shadow-card overflow-hidden group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/mehedi-about.jpg"
+                alt="Mehedi Hasan - Software Engineer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
             {/* Status Beacon */}
-            <div className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-color-success-subtle border border-color-success/40 text-color-success text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-color-success animate-pulse" />
+            <div className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-surface-elevated border border-emerald-500/30 text-slate-200 text-[11px] font-bold flex items-center gap-2 shadow-card z-10">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
               <span>Available for Hire</span>
             </div>
           </div>

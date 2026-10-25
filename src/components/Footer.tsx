@@ -1,21 +1,30 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail, Heart, Sparkles } from "lucide-react";
+import { Terminal, Github, Linkedin, Mail } from "lucide-react";
 
 export default function Footer() {
-  return (
-    <footer className="relative border-t border-border/50 bg-deep-dark">
-      <div className="section-divider" />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo (Solid Text, Amber period) */}
-          <div className="flex items-center gap-2">
-            <span className="font-heading text-xl font-bold text-text-heading">
-              MH<span className="text-brand-primary">.</span>
-            </span>
-          </div>
+  const currentYear = new Date().getFullYear();
 
-          {/* Links */}
-          <div className="flex items-center gap-6">
+  return (
+    <footer className="relative pt-6 pb-8 px-3 sm:px-6 lg:px-8 bg-canvas">
+      {/* Outer Card with native solid surface background */}
+      <div className="mx-auto max-w-7xl rounded-3xl sm:rounded-[2.5rem] bg-surface border border-border-subtle pt-8 sm:pt-10 px-0 pb-0 overflow-hidden relative shadow-card">
+        {/* Top Row: Brand Logo with Circular Icon & Verified Social Links */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 pb-12 sm:pb-16 px-6 sm:px-10 lg:px-12 relative z-10">
+          {/* Brand Logo matching Navbar and unified brand identity */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 group cursor-pointer select-none"
+          >
+            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-primary">
+              <Terminal className="w-4 h-4" />
+            </div>
+            <span className="font-heading font-black text-base sm:text-lg tracking-tight text-heading">
+              MEHEDI<span className="text-brand-primary font-black">.</span>
+            </span>
+          </Link>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-3">
             {[
               { icon: Github, href: "https://github.com/iammehedi4201", label: "GitHub" },
               { icon: Linkedin, href: "https://www.linkedin.com/in/mehedi-hasan-4b81131a6", label: "LinkedIn" },
@@ -26,29 +35,29 @@ export default function Footer() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-text-muted hover:text-brand-primary transition-colors"
                 aria-label={label}
+                className="w-9 h-9 rounded-xl bg-surface-elevated hover:bg-surface-subtle border border-border-subtle hover:border-brand-primary text-body hover:text-brand-primary flex items-center justify-center transition-colors shadow-sm"
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4 w-4" />
               </a>
             ))}
-            <Link
-              href="/design-system"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-surface-elevated hover:bg-surface-subtle text-text-body hover:text-text-heading border border-border-subtle transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
-              <span>Design System</span>
-            </Link>
           </div>
+        </div>
 
-          {/* Copyright */}
-          <p className="text-sm text-text-muted flex items-center gap-1">
-            Made with <Heart className="h-3.5 w-3.5 text-color-error fill-color-error" /> by Mehedi Hasan ·{" "}
-            {new Date().getFullYear()}
+        {/* Centered Copyright Line directly above the big name */}
+        <div className="text-center pb-6 sm:pb-8 px-6 relative z-10">
+          <p className="text-xs sm:text-sm text-text-muted font-normal tracking-wide">
+            Copyright &copy; {currentYear} Mehedi Hasan. All Rights Reserved.
           </p>
+        </div>
+
+        {/* Big Highlighted Name — Edge-to-Edge Typography touching bottom edge */}
+        <div className="pt-2 sm:pt-4 pb-0 px-2 sm:px-3 w-full flex justify-center items-end overflow-hidden relative z-10">
+          <h2 className="font-[family-name:var(--font-syne)] font-semibold text-[15.2vw] sm:text-[14.6vw] md:text-[13.8vw] lg:text-[13vw] xl:text-[168px] tracking-tight leading-none text-heading select-none text-center pointer-events-none whitespace-nowrap -mb-1 sm:-mb-2 md:-mb-3 w-full">
+            Mehedi Hasan
+          </h2>
         </div>
       </div>
     </footer>
   );
 }
-

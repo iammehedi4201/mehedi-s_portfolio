@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X, Sun, Moon, Terminal, FileText } from "lucide-react";
+import { Menu, X, Terminal, FileText } from "lucide-react";
 
 const navLinks = [
   { label: "About", href: "/#about" },
@@ -19,12 +18,9 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -43,10 +39,10 @@ export default function Navbar() {
       >
         <nav
           className={cn(
-            "mx-auto max-w-5xl flex items-center justify-between h-14 rounded-2xl border transition-colors duration-200 pointer-events-auto px-5 sm:px-6 shadow-card",
+            "mx-auto max-w-7xl flex items-center justify-between h-14 rounded-2xl border transition-colors duration-200 pointer-events-auto px-5 sm:px-6 shadow-card",
             scrolled
-              ? "bg-secondary/40 backdrop-blur-xl border-white/10"
-              : "bg-transparent border-transparent"
+              ? "bg-surface-elevated/90 backdrop-blur-xl border-white/10"
+              : "bg-surface/60 backdrop-blur-md border-border-subtle"
           )}
         >
           {/* Brand Logo */}
@@ -96,21 +92,6 @@ export default function Navbar() {
               <FileText className="w-3.5 h-3.5 text-brand-primary" />
               <span>Resume</span>
             </a>
-
-            {/* Theme Toggle (Solid) */}
-            {mounted && (
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                aria-label="Toggle theme"
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-body hover:text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle transition-colors cursor-pointer"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-4 w-4 text-brand-primary" />
-                ) : (
-                  <Moon className="h-4 w-4 text-brand-primary" />
-                )}
-              </button>
-            )}
 
             {/* Mobile Hamburger Toggle */}
             <button

@@ -135,8 +135,8 @@ export default function ProjectsSection() {
                 </div>
 
                 <div className="absolute top-3.5 right-3.5">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-color-success-subtle/95 backdrop-blur-sm border border-color-success/40 text-color-success text-[10px] font-bold shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-color-success animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/90 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-[10px] font-bold shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Live Production</span>
                   </span>
                 </div>
@@ -206,8 +206,8 @@ export default function ProjectsSection() {
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute top-3 right-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-color-success-subtle/95 backdrop-blur-sm border border-color-success/40 text-color-success text-[10px] font-bold shadow-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-color-success animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/90 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-[10px] font-bold shadow-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       <span>Live Site</span>
                     </span>
                   </div>

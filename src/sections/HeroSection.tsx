@@ -64,7 +64,8 @@ function DeveloperTerminalCard() {
             <Code2 className="w-3.5 h-3.5 text-brand-primary" />
             <span>developer.ts</span>
           </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-color-success-subtle text-color-success border border-color-success/30 font-bold">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             online
           </span>
         </div>
@@ -74,15 +75,15 @@ function DeveloperTerminalCard() {
           <code>
             <span className="text-brand-primary font-bold">const</span>{" "}
             <span className="text-heading font-bold">engineer</span> = {"{\n"}
-            {"  "}name: <span className="text-color-success">&quot;Mehedi Hasan&quot;</span>,{"\n"}
-            {"  "}role: <span className="text-color-success">&quot;Software Engineer&quot;</span>,{"\n"}
-            {"  "}company: <span className="text-color-success">&quot;Antopolis&quot;</span>,{"\n"}
+            {"  "}name: <span className="text-emerald-400">&quot;Mehedi Hasan&quot;</span>,{"\n"}
+            {"  "}role: <span className="text-emerald-400">&quot;Software Engineer&quot;</span>,{"\n"}
+            {"  "}company: <span className="text-emerald-400">&quot;Antopolis&quot;</span>,{"\n"}
             {"  "}stack: [<span className="text-brand-primary">&quot;Next.js&quot;</span>,{"\n"}
             {"    "}<span className="text-brand-primary">&quot;React&quot;</span>,{"\n"}
             {"    "}<span className="text-brand-primary">&quot;Express.js&quot;</span>,{"\n"}
             {"    "}<span className="text-brand-primary">&quot;MongoDB&quot;</span>],{"\n"}
             {"  "}cleanArchitecture: <span className="text-color-warning font-bold">true</span>,{"\n"}
-            {"  "}available: <span className="text-color-success font-bold">true</span>{"\n"}
+            {"  "}available: <span className="text-emerald-400 font-bold">true</span>{"\n"}
             {"}"};
           </code>
         </pre>
@@ -132,10 +133,13 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-color-success-subtle border border-color-success/30 text-color-success text-xs font-bold mb-6"
+            className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-surface-elevated border border-emerald-500/30 text-xs font-semibold text-slate-200 shadow-sm mb-6"
           >
-            <span className="w-2 h-2 rounded-full bg-color-success animate-pulse" />
-            <span>Available for engineering roles & opportunities</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            <span>Available for engineering roles &amp; opportunities</span>
           </motion.div>
 
           {/* Heading (Solid color, NO gradients) */}
