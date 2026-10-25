@@ -102,15 +102,15 @@ export default function AboutSection() {
           className="lg:col-span-7 space-y-8"
         >
           {/* Bio text */}
-          <div className="space-y-4 text-body text-base sm:text-lg leading-relaxed">
+          <div className="space-y-3.5 text-body text-base leading-relaxed">
             <h3 className="text-2xl font-black font-heading text-heading">
-              Building scalable web applications with <span className="text-brand-primary">clean architecture</span> &amp; modern engineering.
+              Building scalable web apps with <span className="text-brand-primary">clean architecture</span>.
             </h3>
             <p>
-              I am a Software Engineer based in Dhaka, Bangladesh, with extensive experience architecting and shipping production web applications. At <strong>Antopolis</strong>, I contributed as a core development team member building scalable products, dynamic Content Management Systems (CMS), admin portals, and customer-facing platforms using Next.js, React, Express.js, and MongoDB.
+              I am a Software Engineer based in Dhaka, Bangladesh. At <strong>Antopolis</strong>, I developed scalable web applications, dynamic CMS platforms, and admin dashboards using <strong>Next.js, React, Express.js, and MongoDB</strong>.
             </p>
-            <p className="text-sm sm:text-base">
-              I hold a <strong>Bachelor of Science in Computer Science and Engineering</strong> from <strong>Daffodil International University</strong> (CGPA: 3.54 / 4.00). My engineering philosophy centers on clean architecture, type-safe API integrations, robust state management, and building intuitive user experiences that deliver measurable business impact.
+            <p>
+              I hold a B.Sc. in Computer Science &amp; Engineering from <strong>Daffodil International University</strong> (CGPA: 3.54 / 4.00), focused on clean code, robust APIs, and high performance.
             </p>
           </div>
 
