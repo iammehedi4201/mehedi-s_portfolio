@@ -2,12 +2,14 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IProject extends Document {
   title: string;
+  timeline?: string;
   description: string;
   thumbnail: string;
   techStack: string[];
   category: string;
   liveUrl: string;
   githubUrl: string;
+  features?: string[];
   order: number;
   status: "published" | "draft";
   deletedAt: Date | null;
@@ -18,12 +20,14 @@ export interface IProject extends Document {
 const ProjectSchema = new Schema<IProject>(
   {
     title: { type: String, required: true, trim: true },
+    timeline: { type: String, default: "" },
     description: { type: String, required: true },
     thumbnail: { type: String, default: "" },
     techStack: { type: [String], default: [] },
     category: { type: String, required: true },
     liveUrl: { type: String, default: "" },
     githubUrl: { type: String, default: "" },
+    features: { type: [String], default: [] },
     order: { type: Number, default: 0 },
     status: { type: String, enum: ["published", "draft"], default: "draft" },
     deletedAt: { type: Date, default: null },

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/db";
-import Project from "@/lib/models/Project";
+import { projectStore } from "@/lib/storage/projectStore";
 
 // GET /api/dashboard/projects — Protected: all projects (including drafts)
 export async function GET() {
@@ -15,11 +14,7 @@ export async function GET() {
       );
     }
 
-    await dbConnect();
-    const projects = await Project.find({ deletedAt: null })
-      .sort({ order: 1 })
-      .lean();
-
+    const projects = await projectStore.getAll({ includeDrafts: true });
     return NextResponse.json({ success: true, data: projects });
   } catch (error) {
     console.error("GET /api/dashboard/projects error:", error);
@@ -49,15 +44,7 @@ export async function PUT(req: Request) {
       );
     }
 
-    await dbConnect();
-
-    // Update orders in bulk using Promise.all
-    await Promise.all(
-      projectIds.map((id: string, index: number) =>
-        Project.findByIdAndUpdate(id, { order: index })
-      )
-    );
-
+    await projectStore.updateOrder(projectIds);
     return NextResponse.json({ success: true, message: "Order updated" });
   } catch (error) {
     console.error("PUT /api/dashboard/projects error:", error);

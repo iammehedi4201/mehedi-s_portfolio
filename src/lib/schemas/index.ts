@@ -3,14 +3,16 @@ import { z } from "zod";
 /* ===== Project Schemas ===== */
 export const createProjectSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  timeline: z.string().optional().default(""),
   description: z.string().min(1, "Description is required"),
-  thumbnail: z.string().url("Thumbnail must be a valid URL"),
-  techStack: z.array(z.string()).min(1, "At least one tech is required"),
+  thumbnail: z.string().optional().default(""),
+  techStack: z.array(z.string()).min(1, "At least one technology is required"),
   category: z.string().min(1, "Category is required"),
-  liveUrl: z.string().url("Live URL must be valid"),
-  githubUrl: z.string().url("GitHub URL must be valid"),
+  liveUrl: z.string().optional().default(""),
+  githubUrl: z.string().optional().default(""),
+  features: z.array(z.string()).optional().default([]),
   status: z.enum(["published", "draft"]).default("draft"),
-  order: z.number().int().min(0).optional(), // ✅ add this
+  order: z.number().int().min(0).optional(),
 });
 export const updateProjectSchema = createProjectSchema.partial();
 

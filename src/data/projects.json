@@ -1,0 +1,156 @@
+[
+  {
+    "_id": "proj-vipbamc",
+    "title": "VIPB Asset Management Company Ltd.",
+    "timeline": "Jan 2026 — Mar 2026",
+    "description": "Full-stack Mutual Fund Investment Platform supporting Individual, Joint, and Company investor accounts. Features automated recurring SIP installments, lump sum investments, investor & admin dashboards, tax certificates, PDF reports, Excel record exports, and weekly portfolio email alerts.",
+    "thumbnail": "/projects/vipbamc.png",
+    "techStack": [
+      "Next.js",
+      "React.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "JWT",
+      "Recharts",
+      "Nodemailer",
+      "TanStack",
+      "Tailwind CSS"
+    ],
+    "category": "fullstack",
+    "liveUrl": "https://vipbamc.com/",
+    "githubUrl": "",
+    "features": [
+      "Individual, Joint, and Company investor account onboarding",
+      "SIP (Systematic Investment Plan) and Lump Sum investment processing with automated recurring installments",
+      "Investor & admin portals for tracking portfolio performance, withdrawals, and transactions",
+      "Automated PDF tax certificates, financial reports, Excel exports, and email alert services"
+    ],
+    "order": 0,
+    "status": "published",
+    "deletedAt": null,
+    "createdAt": "2026-01-15T00:00:00.000Z",
+    "updatedAt": "2026-03-20T00:00:00.000Z"
+  },
+  {
+    "_id": "proj-icebusinesstimes",
+    "title": "ICE Business Times",
+    "timeline": "May 2026",
+    "description": "Full-stack business magazine platform and dedicated Content Management System (CMS) enabling administrators to publish, schedule, and organize magazine articles with dynamic categorization, search, archive, SEO-friendly routing, and role-based authentication.",
+    "thumbnail": "/projects/icebusinesstimes.png",
+    "techStack": [
+      "Next.js",
+      "React.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "REST API",
+      "Tailwind CSS",
+      "Shadcn UI",
+      "JWT Authentication",
+      "DigitalOcean"
+    ],
+    "category": "fullstack",
+    "liveUrl": "https://icebusinesstimes.com",
+    "githubUrl": "",
+    "features": [
+      "Full-featured Content Management System (CMS) for editors and publications",
+      "Dynamic article categorization, archive management, and SEO-friendly routing",
+      "Secure role-based authentication and authorization for admins, editors, and managers",
+      "High-performance REST APIs and optimized database operations hosted on DigitalOcean"
+    ],
+    "order": 1,
+    "status": "published",
+    "deletedAt": null,
+    "createdAt": "2026-05-01T00:00:00.000Z",
+    "updatedAt": "2026-05-15T00:00:00.000Z"
+  },
+  {
+    "_id": "proj-bd-medicine-api",
+    "title": "Bangladeshi Medicine API & Directory",
+    "timeline": "2025",
+    "description": "High-throughput REST and GraphQL API indexing over 20,000+ pharmaceutical products, generics, dosage forms, and brand alternatives in Bangladesh with instant fuzzy search and clean database architecture.",
+    "thumbnail": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=1470&auto=format&fit=crop",
+    "techStack": [
+      "Node.js",
+      "Express.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Mongoose",
+      "REST API",
+      "Docker"
+    ],
+    "category": "backend",
+    "liveUrl": "https://bd-medicine-api.vercel.app",
+    "githubUrl": "https://github.com/iammehedi4201/bd-medicine-api",
+    "features": [
+      "Fast full-text fuzzy search engine across 20,000+ pharmaceutical brand names and generics",
+      "Robust dosage form, manufacturer, and pricing classification schema",
+      "RESTful endpoints and GraphQL queries with rate-limiting and Redis caching",
+      "Automated scraping and pipeline validation for new medicine releases"
+    ],
+    "order": 2,
+    "status": "published",
+    "deletedAt": "2026-10-25T18:19:00.052Z",
+    "createdAt": "2025-08-10T00:00:00.000Z",
+    "updatedAt": "2025-10-12T00:00:00.000Z"
+  },
+  {
+    "_id": "proj-learncraft",
+    "title": "LearnCraft — Interactive Learning Platform",
+    "timeline": "2025",
+    "description": "Modern developer learning platform featuring modular interactive roadmaps, spaced repetition flashcards, automated code runners, and telemetry analytics.",
+    "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1470&auto=format&fit=crop",
+    "techStack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "MongoDB",
+      "Zod"
+    ],
+    "category": "frontend",
+    "liveUrl": "https://learncraft.dev",
+    "githubUrl": "https://github.com/iammehedi4201/learncraft",
+    "features": [
+      "Interactive curriculum pathways with completion tracking",
+      "Spaced repetition algorithms for developer knowledge retention",
+      "In-browser code execution sandbox with real-time linting",
+      "Custom achievement badges and progress analytics dashboard"
+    ],
+    "order": 3,
+    "status": "published",
+    "deletedAt": "2026-10-25T18:19:04.608Z",
+    "createdAt": "2025-06-01T00:00:00.000Z",
+    "updatedAt": "2025-07-20T00:00:00.000Z"
+  },
+  {
+    "_id": "proj-design-system",
+    "title": "Design System Tokens & Component Kit",
+    "timeline": "2026",
+    "description": "Custom semantic design system architecture featuring light/dark adaptive tokens, interactive playground, and solid color components without gradients.",
+    "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1470&auto=format&fit=crop",
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Radix UI",
+      "CSS Tokens"
+    ],
+    "category": "frontend",
+    "liveUrl": "/design-system",
+    "githubUrl": "https://github.com/iammehedi4201/mehedi-s_portfolio",
+    "features": [
+      "Semantic HSL token engine with strict surface, border, and text hierarchies",
+      "WCAG AAA compliance contrast ratios for developer accessibility",
+      "Reusable UI kit with headless Radix primitives and fluid micro-interactions",
+      "Zero external CSS framework dependencies for clean, deterministic styling"
+    ],
+    "order": 4,
+    "status": "published",
+    "deletedAt": "2026-10-25T18:19:07.307Z",
+    "createdAt": "2026-02-01T00:00:00.000Z",
+    "updatedAt": "2026-02-15T00:00:00.000Z"
+  }
+]

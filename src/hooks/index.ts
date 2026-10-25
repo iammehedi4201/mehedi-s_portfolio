@@ -73,20 +73,11 @@ export function useContactForm() {
   return { submitForm, isSubmitting, isSuccess, error };
 }
 
+import type { Project } from "@/types";
+
 /** Hook to fetch projects from API */
 export function useProjects(category?: string) {
-  const [projects, setProjects] = useState<
-    Array<{
-      _id: string;
-      title: string;
-      description: string;
-      thumbnail: string;
-      techStack: string[];
-      category: string;
-      liveUrl: string;
-      githubUrl: string;
-    }>
-  >([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -94,9 +85,9 @@ export function useProjects(category?: string) {
       setIsLoading(true);
       try {
         const params = category && category !== "all" ? `?category=${category}` : "";
-        const res = await fetch(`/api/projects${params}`);
+        const res = await fetch(`/api/projects${params}`, { cache: "no-store" });
         const json = await res.json();
-        if (json.success) {
+        if (json.success && Array.isArray(json.data)) {
           setProjects(json.data);
         }
       } catch {

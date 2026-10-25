@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/db";
-import Project from "@/lib/models/Project";
 import { updateProjectSchema } from "@/lib/schemas";
+import { projectStore } from "@/lib/storage/projectStore";
 
 // GET /api/projects/[id] — Public: single project
 export async function GET(
@@ -11,10 +10,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await dbConnect();
-    const project = await Project.findById(params.id).lean();
+    const project = await projectStore.getById(params.id);
 
-    if (!project || project.deletedAt) {
+    if (!project) {
       return NextResponse.json(
         { success: false, error: "Project not found" },
         { status: 404 }
@@ -45,7 +43,6 @@ export async function PUT(
       );
     }
 
-    await dbConnect();
     const body = await req.json();
     const parsed = updateProjectSchema.safeParse(body);
 
@@ -56,9 +53,7 @@ export async function PUT(
       );
     }
 
-    const project = await Project.findByIdAndUpdate(params.id, parsed.data, {
-      new: true,
-    }).lean();
+    const project = await projectStore.update(params.id, parsed.data);
 
     if (!project) {
       return NextResponse.json(
@@ -95,14 +90,9 @@ export async function DELETE(
       );
     }
 
-    await dbConnect();
-    const project = await Project.findByIdAndUpdate(
-      params.id,
-      { deletedAt: new Date() },
-      { new: true }
-    ).lean();
+    const deleted = await projectStore.delete(params.id);
 
-    if (!project) {
+    if (!deleted) {
       return NextResponse.json(
         { success: false, error: "Project not found" },
         { status: 404 }

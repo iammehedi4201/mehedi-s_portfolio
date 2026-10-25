@@ -3,12 +3,14 @@
 export interface Project {
   _id: string;
   title: string;
+  timeline?: string;
   description: string;
   thumbnail: string;
   techStack: string[];
   category: string;
   liveUrl: string;
   githubUrl: string;
+  features?: string[];
   order: number;
   status: "published" | "draft";
   deletedAt: string | null;

@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionWrapper, SectionHeading } from "@/components/section-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -15,13 +14,12 @@ import {
 } from "@/components/ui/dialog";
 import { useProjects, useAnalytics } from "@/hooks";
 import { ExternalLink, Github, FolderCode } from "lucide-react";
+import type { Project } from "@/types";
 
-const categories = ["all", "fullstack"];
-
-// Genuine production projects extracted from Mehedi Hasan's verified CV
-const REAL_PROJECTS = [
+// Genuine production projects extracted from Mehedi Hasan's verified CV (fallback)
+const REAL_PROJECTS: Project[] = [
   {
-    _id: "p1",
+    _id: "proj-vipbamc",
     title: "VIPB Asset Management Company Ltd.",
     timeline: "Jan 2026 — Mar 2026",
     description:
@@ -48,9 +46,14 @@ const REAL_PROJECTS = [
       "Investor & admin portals for tracking portfolio performance, withdrawals, and transactions",
       "Automated PDF tax certificates, financial reports, Excel exports, and email alert services",
     ],
+    order: 0,
+    status: "published",
+    deletedAt: null,
+    createdAt: "2026-01-15T00:00:00.000Z",
+    updatedAt: "2026-03-20T00:00:00.000Z",
   },
   {
-    _id: "p2",
+    _id: "proj-icebusinesstimes",
     title: "ICE Business Times",
     timeline: "May 2026",
     description:
@@ -77,18 +80,36 @@ const REAL_PROJECTS = [
       "Secure role-based authentication and authorization for admins, editors, and managers",
       "High-performance REST APIs and optimized database operations hosted on DigitalOcean",
     ],
+    order: 1,
+    status: "published",
+    deletedAt: null,
+    createdAt: "2026-05-01T00:00:00.000Z",
+    updatedAt: "2026-05-15T00:00:00.000Z",
   },
 ];
 
 export default function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState("all");
   const { logClick } = useAnalytics();
+  const { projects: apiProjects, isLoading } = useProjects();
 
-  const projects = REAL_PROJECTS.filter(
+  const availableProjects = useMemo(() => {
+    return apiProjects.length > 0 ? apiProjects : REAL_PROJECTS;
+  }, [apiProjects]);
+
+  const categories = useMemo(() => {
+    const cats = new Set<string>(["all"]);
+    availableProjects.forEach((p) => {
+      if (p.category) cats.add(p.category);
+    });
+    return Array.from(cats);
+  }, [availableProjects]);
+
+  const projects = availableProjects.filter(
     (p) => activeCategory === "all" || p.category === activeCategory
   );
 
-  const [selectedProject, setSelectedProject] = useState<(typeof REAL_PROJECTS)[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
     <SectionWrapper id="projects">
@@ -97,6 +118,25 @@ export default function ProjectsSection() {
         title="Featured Engineering Projects"
         subtitle="Full-scale production web applications built, deployed, and maintained with clean architecture and robust APIs."
       />
+
+      {/* Category Filter Pills (if multiple categories available) */}
+      {categories.length > 2 && (
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+                activeCategory === cat
+                  ? "bg-brand-primary text-brand-on-primary shadow-sm"
+                  : "bg-surface border border-border-subtle text-muted-foreground hover:text-heading hover:border-white/20"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Projects Grid (Solid, 2-column showcase with real screenshots) */}
       <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -130,7 +170,7 @@ export default function ProjectsSection() {
                 {/* Status Badges */}
                 <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
                   <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md bg-surface/95 backdrop-blur-sm border border-border-subtle text-heading shadow-sm">
-                    {project.timeline}
+                    {project.timeline || "Production"}
                   </span>
                 </div>
 
@@ -178,7 +218,7 @@ export default function ProjectsSection() {
                 {/* Tech stack badges */}
                 <div className="pt-2 border-t border-border-subtle">
                   <div className="flex flex-wrap gap-1.5">
-                    {project.techStack.map((tech) => (
+                    {(project.techStack || []).map((tech) => (
                       <Badge key={tech} variant="secondary" className="text-[11px] font-semibold">
                         {tech}
                       </Badge>
@@ -217,7 +257,7 @@ export default function ProjectsSection() {
               <DialogHeader>
                 <div className="inline-flex items-center gap-2 mb-1">
                   <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-subtle text-brand-primary border border-brand-primary/30">
-                    {selectedProject.timeline}
+                    {selectedProject.timeline || "Production"}
                   </span>
                 </div>
                 <DialogTitle className="font-heading text-2xl font-black text-heading">
@@ -229,19 +269,21 @@ export default function ProjectsSection() {
               </DialogHeader>
 
               {/* Key Features Bullet List from CV */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
-                  Key Achievements &amp; Contributions
-                </h4>
-                <ul className="space-y-1.5 text-xs text-body">
-                  {selectedProject.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="text-brand-primary font-bold mt-0.5">•</span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {selectedProject.features && selectedProject.features.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
+                    Key Achievements &amp; Contributions
+                  </h4>
+                  <ul className="space-y-1.5 text-xs text-body">
+                    {selectedProject.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-brand-primary font-bold mt-0.5">•</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Technologies */}
               <div className="space-y-2">
@@ -249,7 +291,7 @@ export default function ProjectsSection() {
                   Technologies Used
                 </h4>
                 <div className="flex flex-wrap gap-1.5">
-                  {selectedProject.techStack.map((tech) => (
+                  {(selectedProject.techStack || []).map((tech) => (
                     <Badge key={tech} variant="brand" className="text-xs py-1">
                       {tech}
                     </Badge>

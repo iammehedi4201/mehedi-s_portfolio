@@ -74,7 +74,7 @@ export function useProjectManagement() {
         try {
           await updateOrderMutation.mutateAsync(projectIds);
           toast.success("Order updated successfully");
-        } catch (error) {
+        } catch {
           queryClient.setQueryData(["dashboard-projects"], previousProjects);
           toast.error("Failed to update order");
         }
@@ -82,53 +82,61 @@ export function useProjectManagement() {
     }
   };
 
-  const uploadToCloudinary = async (file: File): Promise<string> => {
+  const uploadImage = async (file: File): Promise<string> => {
+    // 1. Try Cloudinary if configured
     try {
       const signRes = await fetch("/api/cloudinary/sign", { method: "POST" });
-      const signData = await signRes.json();
+      if (signRes.ok) {
+        const signData = await signRes.json();
+        if (signData.cloudName && signData.apiKey && signData.signature) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("api_key", signData.apiKey);
+          formData.append("timestamp", signData.timestamp.toString());
+          formData.append("signature", signData.signature);
 
-      if (!signRes.ok || signData.error) {
-        throw new Error(signData.error || "Failed to sign upload");
-      }
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("api_key", signData.apiKey);
-      formData.append("timestamp", signData.timestamp.toString());
-      formData.append("signature", signData.signature);
-
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
+          const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const data = await res.json();
+          if (data.secure_url) return data.secure_url;
         }
-      );
-
-      const data = await res.json();
-      if (data.secure_url) {
-        return data.secure_url;
-      } else {
-        throw new Error(data.error?.message || "Cloudinary upload failed");
       }
-    } catch (err) {
-      console.error("Cloudinary upload error:", err);
-      throw err;
+    } catch {
+      // Cloudinary not available or error, continue to local upload
     }
+
+    // 2. Fall back to local upload
+    const localFormData = new FormData();
+    localFormData.append("file", file);
+    const localRes = await fetch("/api/upload", {
+      method: "POST",
+      body: localFormData,
+    });
+    const localData = await localRes.json();
+    if (localRes.ok && localData.success && localData.url) {
+      return localData.url;
+    }
+
+    throw new Error(localData.error || "Failed to upload image");
   };
 
   const onSubmit = async (data: CreateProjectInput, selectedFile: File | null) => {
     try {
-      let finalThumbnail = data.thumbnail;
+      let finalThumbnail = data.thumbnail || "";
 
       if (selectedFile) {
-        const uploadToast = toast.loading("Uploading image to Cloudinary...");
+        const uploadToast = toast.loading("Uploading project image...");
         try {
-          finalThumbnail = await uploadToCloudinary(selectedFile);
+          finalThumbnail = await uploadImage(selectedFile);
           toast.dismiss(uploadToast);
         } catch (error) {
-          toast.error("Image upload failed. Please try again.");
           toast.dismiss(uploadToast);
+          toast.error(error instanceof Error ? error.message : "Image upload failed");
           return;
         }
       }

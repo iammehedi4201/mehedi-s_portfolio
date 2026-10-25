@@ -1,26 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/db";
-import Project from "@/lib/models/Project";
 import { createProjectSchema } from "@/lib/schemas";
+import { projectStore } from "@/lib/storage/projectStore";
 
 // GET /api/projects — Public: list published projects, supports ?category= filter
 export async function GET(req: NextRequest) {
   try {
-    await dbConnect();
     const { searchParams } = new URL(req.url);
-    const category = searchParams.get("category");
+    const category = searchParams.get("category") || undefined;
 
-    const filter: Record<string, unknown> = {
-      deletedAt: null,
-      status: "published",
-    };
-    if (category && category !== "all") {
-      filter.category = category;
-    }
-
-    const projects = await Project.find(filter).sort({ order: 1 }).lean();
+    const projects = await projectStore.getAll({
+      includeDrafts: false,
+      category,
+    });
 
     return NextResponse.json({ success: true, data: projects });
   } catch (error) {
@@ -43,7 +36,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await dbConnect();
     const body = await req.json();
     const parsed = createProjectSchema.safeParse(body);
 
@@ -54,14 +46,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // If order is not provided, append to the end by using max(order) + 1
-    if (parsed.data.order == null) {
-      const maxDoc = await Project.findOne({}).sort({ order: -1 }).select("order").lean();
-      const maxOrder = maxDoc && typeof (maxDoc as any).order === "number" ? (maxDoc as any).order : -1;
-      parsed.data.order = maxOrder + 1;
-    }
-
-    const project = await Project.create(parsed.data);
+    const project = await projectStore.create(parsed.data);
 
     return NextResponse.json(
       { success: true, data: project, message: "Project created" },
