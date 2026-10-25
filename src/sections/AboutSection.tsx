@@ -2,139 +2,163 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { SectionWrapper, SectionHeading } from "@/components/section-wrapper";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { FileText, Sparkles, Code2 } from "lucide-react";
 
 const techStack = [
-  { name: "React", color: "#61DAFB" },
-  { name: "Next.js", color: "#ffffff" },
-  { name: "TypeScript", color: "#3178C6" },
-  { name: "Node.js", color: "#339933" },
-  { name: "MongoDB", color: "#47A248" },
-  { name: "Tailwind CSS", color: "#06B6D4" },
-  { name: "PostgreSQL", color: "#4169E1" },
-  { name: "Python", color: "#3776AB" },
-  { name: "Docker", color: "#2496ED" },
-  { name: "Git", color: "#F05032" },
-  { name: "Redux", color: "#764ABC" },
-  { name: "GraphQL", color: "#E10098" },
+  { name: "Next.js", category: "Full-Stack", color: "#E5A00D" },
+  { name: "React", category: "Frontend", color: "#0284C7" },
+  { name: "TypeScript", category: "Language", color: "#2563EB" },
+  { name: "Express.js", category: "Backend", color: "#D97706" },
+  { name: "Node.js", category: "Backend", color: "#16A34A" },
+  { name: "MongoDB", category: "Database", color: "#15803D" },
+  { name: "PostgreSQL", category: "Database", color: "#3B82F6" },
+  { name: "Tailwind CSS", category: "Styling", color: "#0D9488" },
+  { name: "Shadcn UI", category: "UI System", color: "#7C3AED" },
+  { name: "Redux / Zustand", category: "State", color: "#8B5CF6" },
+  { name: "Python", category: "Language", color: "#F59E0B" },
+  { name: "DigitalOcean", category: "Cloud & DevOps", color: "#0284C7" },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.05 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
-};
+const METRICS = [
+  { value: "3.54", label: "CGPA / 4.00", description: "BSc in CSE, Daffodil Int'l Univ (2023)" },
+  { value: "Antopolis", label: "Software Engineer", description: "Oct 2024 – Sep 2026" },
+  { value: "Qwik IT", label: "Full Stack Intern", description: "Apr 2024 – May 2024" },
+  { value: "Live", label: "Production Platforms", description: "VIPB AMC & ICE Business Times" },
+];
 
 export default function AboutSection() {
-  const [cvUrl, setCvUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/cv")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.cvUrl) setCvUrl(json.cvUrl);
-      })
-      .catch(() => {});
-  }, []);
+  const cvUrl = "/Mehedi_Hasan_CV.pdf";
 
   return (
     <SectionWrapper id="about" className="bg-background relative overflow-hidden">
       {/* Background elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-electric/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/5 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-primary/5 rounded-full blur-[120px] -z-10" />
 
       <SectionHeading
-        title="About Me"
-        subtitle="Passionate developer who loves turning ideas into reality"
+        badge="About The Engineer"
+        title="Engineering Scalable Web Solutions"
+        subtitle="Software Engineer focused on reliable backend systems, modular UI architecture, and high-performance full-stack applications."
       />
 
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
-        {/* Left — Avatar + Bio */}
+      <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Left Column (5 cols) — Developer Avatar & Stats */}
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
+          initial={{ opacity: 0, x: -25 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="space-y-8"
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-5 space-y-8"
         >
-          {/* Avatar with glow border */}
-          <div className="relative w-56 h-56 mx-auto lg:mx-0 group cursor-default">
-            <div className="absolute inset-[-4px] rounded-full bg-gradient-to-br from-electric via-violet to-cyan animate-spin-slow opacity-80 blur-lg transition-all duration-500 group-hover:opacity-100 group-hover:scale-110" />
-            <div className="relative w-full h-full rounded-full bg-background p-[2px]">
-              <div className="w-full h-full rounded-full bg-secondary flex items-center justify-center overflow-hidden border border-white/10 shadow-inner">
-                 <span className="text-6xl font-heading font-bold gradient-text selection:text-white">MH</span>
+          {/* Avatar (Real Headshot, Solid Border, No Gradients) */}
+          <div className="relative w-56 h-64 sm:w-60 sm:h-72 mx-auto lg:mx-0 cursor-default">
+            <div className="w-full h-full rounded-2xl bg-surface border-2 border-brand-primary p-2 shadow-card overflow-hidden">
+              <div className="w-full h-full rounded-xl overflow-hidden border border-border-subtle bg-surface-subtle relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/mehedi.jpg"
+                  alt="Mehedi Hasan - Software Engineer"
+                  className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                />
               </div>
             </div>
-            {/* Pulsing indicator */}
-            <div className="absolute bottom-6 right-6 w-5 h-5 rounded-full bg-emerald-500 border-4 border-background animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+            {/* Status Beacon */}
+            <div className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-color-success-subtle border border-color-success/40 text-color-success text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-color-success animate-pulse" />
+              <span>Available for Hire</span>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <p className="text-xl font-heading text-foreground font-semibold leading-tight">
-              Software Engineer crafting <span className="gradient-text">visual experiences</span> & robust backends.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              I&apos;m a <span className="text-electric font-medium">full-stack developer</span> with
-              a passion for building modern, scalable web applications. With experience in both
-              <span className="text-violet font-medium"> frontend</span> and
-              <span className="text-cyan font-medium"> backend</span> technologies, I create
-              end-to-end solutions that are performant, accessible, and visually stunning.
-            </p>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              I love exploring new technologies and continuously improving my craft. Currently focused on
-              <span className="text-foreground font-semibold"> React Ecosystem</span> and
-              <span className="text-foreground font-semibold"> Cloud Infrastructure</span>.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4 pt-4">
-            <Button variant="glow" size="lg" className="group rounded-full px-8" asChild>
-              <a href={cvUrl || "#"} target={cvUrl ? "_blank" : "_self"} rel="noopener noreferrer">
-                <Download className="mr-2 h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
-                {cvUrl ? "Download CV" : "CV Coming Soon"}
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" className="rounded-full px-8 hover:bg-white/5 transition-colors">
-              Read My Blog
-            </Button>
+          {/* Key Metric Highlights (Solid) */}
+          <div className="grid grid-cols-2 gap-3.5">
+            {METRICS.map((metric) => (
+              <div
+                key={metric.label}
+                className="p-4 rounded-xl bg-surface border border-border-subtle shadow-card hover:border-brand-primary transition-colors"
+              >
+                <p className="text-xl sm:text-2xl font-black font-heading text-brand-primary truncate">
+                  {metric.value}
+                </p>
+                <p className="text-xs font-bold text-heading mt-1">
+                  {metric.label}
+                </p>
+                <p className="text-[11px] text-text-muted mt-0.5 leading-snug">
+                  {metric.description}
+                </p>
+              </div>
+            ))}
           </div>
         </motion.div>
 
-        {/* Right — Tech Stack Grid */}
+        {/* Right Column (7 cols) — Bio & Tech Arsenal */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          initial={{ opacity: 0, x: 25 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-7 space-y-8"
         >
-          <h3 className="text-sm font-medium uppercase tracking-widest text-muted-foreground mb-6 text-center lg:text-left">
-            Tech Stack
-          </h3>
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-            {techStack.map((tech) => (
-              <motion.div
-                key={tech.name}
-                variants={itemVariants}
-                whileHover={{ scale: 1.08, y: -4 }}
-                className="group glass-card rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer transition-all duration-200 hover:border-electric/30"
-              >
+          {/* Bio text */}
+          <div className="space-y-4 text-body text-base sm:text-lg leading-relaxed">
+            <h3 className="text-2xl font-black font-heading text-heading">
+              Building scalable web applications with <span className="text-brand-primary">clean architecture</span> &amp; modern engineering.
+            </h3>
+            <p>
+              I am a Software Engineer based in Dhaka, Bangladesh, with extensive experience architecting and shipping production web applications. At <strong>Antopolis</strong>, I contributed as a core development team member building scalable products, dynamic Content Management Systems (CMS), admin portals, and customer-facing platforms using Next.js, React, Express.js, and MongoDB.
+            </p>
+            <p className="text-sm sm:text-base">
+              I hold a <strong>Bachelor of Science in Computer Science and Engineering</strong> from <strong>Daffodil International University</strong> (CGPA: 3.54 / 4.00). My engineering philosophy centers on clean architecture, type-safe API integrations, robust state management, and building intuitive user experiences that deliver measurable business impact.
+            </p>
+          </div>
+
+          {/* Action CTAs (Solid) */}
+          <div className="flex flex-wrap gap-3.5 pt-2">
+            <Button variant="primary" size="lg" className="rounded-xl px-7" asChild>
+              <a href={cvUrl} target="_blank" rel="noopener noreferrer">
+                <FileText className="mr-2 h-4 w-4" />
+                View Resume
+              </a>
+            </Button>
+            <Button variant="secondary" size="lg" className="rounded-xl px-7" asChild>
+              <a href="#projects">
+                <Sparkles className="mr-2 h-4 w-4 text-brand-primary" />
+                View Live Projects
+              </a>
+            </Button>
+          </div>
+
+          {/* Tech Stack Grid (Solid) */}
+          <div className="pt-4 border-t border-border-subtle">
+            <h4 className="text-xs font-black uppercase tracking-wider text-text-muted mb-4 flex items-center gap-2">
+              <Code2 className="w-4 h-4 text-brand-primary" />
+              <span>Core Technologies & Tooling</span>
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {techStack.map((tech) => (
                 <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold"
-                  style={{ backgroundColor: `${tech.color}15`, color: tech.color }}
+                  key={tech.name}
+                  className="p-3 rounded-xl bg-surface border border-border-subtle hover:border-brand-primary transition-colors flex items-center gap-3 shadow-sm cursor-default group"
                 >
-                  {tech.name.charAt(0)}
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    style={{ backgroundColor: `${tech.color}18`, color: tech.color }}
+                  >
+                    {tech.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-heading group-hover:text-brand-primary transition-colors truncate">
+                      {tech.name}
+                    </p>
+                    <p className="text-[10px] text-text-muted truncate">
+                      {tech.category}
+                    </p>
+                  </div>
                 </div>
-                <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors text-center">
-                  {tech.name}
-                </span>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>

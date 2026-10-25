@@ -11,18 +11,29 @@ export async function GET() {
     const settings = await GlobalSettings.findOne({});
     return NextResponse.json({ 
       success: true, 
-      cvUrl: settings?.cvUrl || "",
-      activeCategory: settings?.activeCategory || "",
+      cvUrl: settings?.cvUrl || "/Mehedi_Hasan_CV.pdf",
+      activeCategory: settings?.activeCategory || "fullstack",
       cvLinks: settings?.cvLinks || {
-        frontend: "",
-        backend: "",
-        fullstack: "",
-        mernstack: "",
-        react: ""
+        frontend: "/Mehedi_Hasan_CV.pdf",
+        backend: "/Mehedi_Hasan_CV.pdf",
+        fullstack: "/Mehedi_Hasan_CV.pdf",
+        mernstack: "/Mehedi_Hasan_CV.pdf",
+        react: "/Mehedi_Hasan_CV.pdf"
       }
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: "Failed to fetch CV" }, { status: 500 });
+    return NextResponse.json({ 
+      success: true, 
+      cvUrl: "/Mehedi_Hasan_CV.pdf",
+      activeCategory: "fullstack",
+      cvLinks: {
+        frontend: "/Mehedi_Hasan_CV.pdf",
+        backend: "/Mehedi_Hasan_CV.pdf",
+        fullstack: "/Mehedi_Hasan_CV.pdf",
+        mernstack: "/Mehedi_Hasan_CV.pdf",
+        react: "/Mehedi_Hasan_CV.pdf"
+      }
+    });
   }
 }
 

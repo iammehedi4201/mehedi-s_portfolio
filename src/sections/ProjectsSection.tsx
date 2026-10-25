@@ -14,232 +14,267 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useProjects, useAnalytics } from "@/hooks";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, FolderCode } from "lucide-react";
 
-const categories = ["all", "frontend", "backend", "fullstack", "mobile"];
+const categories = ["all", "fullstack"];
+
+// Genuine production projects extracted from Mehedi Hasan's verified CV
+const REAL_PROJECTS = [
+  {
+    _id: "p1",
+    title: "VIPB Asset Management Company Ltd.",
+    timeline: "Jan 2026 — Mar 2026",
+    description:
+      "Full-stack Mutual Fund Investment Platform supporting Individual, Joint, and Company investor accounts. Features automated recurring SIP installments, lump sum investments, investor & admin dashboards, tax certificates, PDF reports, Excel record exports, and weekly portfolio email alerts.",
+    thumbnail: "/projects/vipbamc.png",
+    techStack: [
+      "Next.js",
+      "React.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "JWT",
+      "Recharts",
+      "Nodemailer",
+      "TanStack",
+      "Tailwind CSS",
+    ],
+    category: "fullstack",
+    liveUrl: "https://vipbamc.com/",
+    githubUrl: "",
+    features: [
+      "Individual, Joint, and Company investor account onboarding",
+      "SIP (Systematic Investment Plan) and Lump Sum investment processing with automated recurring installments",
+      "Investor & admin portals for tracking portfolio performance, withdrawals, and transactions",
+      "Automated PDF tax certificates, financial reports, Excel exports, and email alert services",
+    ],
+  },
+  {
+    _id: "p2",
+    title: "ICE Business Times",
+    timeline: "May 2026",
+    description:
+      "Full-stack business magazine platform and dedicated Content Management System (CMS) enabling administrators to publish, schedule, and organize magazine articles with dynamic categorization, search, archive, SEO-friendly routing, and role-based authentication.",
+    thumbnail: "/projects/icebusinesstimes.png",
+    techStack: [
+      "Next.js",
+      "React.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "REST API",
+      "Tailwind CSS",
+      "Shadcn UI",
+      "JWT Authentication",
+      "DigitalOcean",
+    ],
+    category: "fullstack",
+    liveUrl: "https://icebusinesstimes.com",
+    githubUrl: "",
+    features: [
+      "Full-featured Content Management System (CMS) for editors and publications",
+      "Dynamic article categorization, archive management, and SEO-friendly routing",
+      "Secure role-based authentication and authorization for admins, editors, and managers",
+      "High-performance REST APIs and optimized database operations hosted on DigitalOcean",
+    ],
+  },
+];
 
 export default function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const { projects, isLoading } = useProjects(activeCategory);
   const { logClick } = useAnalytics();
-  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null);
+
+  const projects = REAL_PROJECTS.filter(
+    (p) => activeCategory === "all" || p.category === activeCategory
+  );
+
+  const [selectedProject, setSelectedProject] = useState<(typeof REAL_PROJECTS)[0] | null>(null);
 
   return (
-    <SectionWrapper id="projects" className="bg-background relative overflow-hidden">
-       {/* Background accent */}
-       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[150px] -z-10 pointer-events-none" />
-
+    <SectionWrapper id="projects">
       <SectionHeading
-        title="Featured Projects"
-        subtitle="Exploring the intersection of design and engineering"
+        badge="Verified Production Work"
+        title="Featured Engineering Projects"
+        subtitle="Full-scale production web applications built, deployed, and maintained with clean architecture and robust APIs."
       />
 
-      {/* Filter Tabs */}
-      <div className="flex justify-center mb-16">
-        <div className="inline-flex gap-2 p-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`relative px-6 py-2 rounded-full text-xs font-heading font-black uppercase tracking-widest transition-all duration-500 ${
-                activeCategory === cat
-                  ? "text-black"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+      {/* Projects Grid (Solid, 2-column showcase with real screenshots) */}
+      <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <AnimatePresence mode="popLayout">
+          {projects.map((project, i) => (
+            <motion.div
+              key={project._id}
+              layout
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, delay: i * 0.1 }}
+              onClick={() => setSelectedProject(project)}
+              className="group rounded-2xl bg-surface border border-border-subtle hover:border-brand-primary shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
             >
-              {activeCategory === cat && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 rounded-full bg-white shadow-[0_0_20px_rgba(255,255,255,0.4)]"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">{cat}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+              {/* Visual Thumbnail Header with Real Screenshot */}
+              <div className="relative h-56 sm:h-64 bg-surface-subtle border-b border-border-subtle overflow-hidden">
+                {project.thumbnail ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={project.thumbnail}
+                    alt={project.title}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FolderCode className="w-12 h-12 text-brand-primary opacity-50" />
+                  </div>
+                )}
 
-      {/* Projects Grid */}
-      {isLoading ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="rounded-xl glass-card overflow-hidden">
-              <Skeleton className="h-48 w-full" />
-              <div className="p-6 space-y-3">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-6 w-16 rounded-full" />
-                  <Skeleton className="h-6 w-16 rounded-full" />
+                {/* Status Badges */}
+                <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md bg-surface/95 backdrop-blur-sm border border-border-subtle text-heading shadow-sm">
+                    {project.timeline}
+                  </span>
+                </div>
+
+                <div className="absolute top-3.5 right-3.5">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-color-success-subtle/95 backdrop-blur-sm border border-color-success/40 text-color-success text-[10px] font-bold shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-color-success animate-pulse" />
+                    <span>Live Production</span>
+                  </span>
+                </div>
+
+                {/* Hover Quick Action Buttons */}
+                <div className="absolute inset-0 bg-black/65 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        logClick(project._id);
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-brand-on-primary font-bold text-xs shadow-md hover:bg-brand-hover transition-colors"
+                      title="Visit Live Website"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      <span>Visit Live Website</span>
+                    </a>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : projects.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-20"
-        >
-          <p className="text-muted-foreground text-lg">No projects found in this category.</p>
-        </motion.div>
-      ) : (
-        <motion.div
-          layout
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {projects.map((project, i) => (
-              <motion.div
-                key={project._id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="group spotlight-card rounded-xl glass-card overflow-hidden cursor-pointer"
-                onClick={() => setSelectedProject(project)}
-                onMouseMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  e.currentTarget.style.setProperty(
-                    "--mouse-x",
-                    `${e.clientX - rect.left}px`
-                  );
-                  e.currentTarget.style.setProperty(
-                    "--mouse-y",
-                    `${e.clientY - rect.top}px`
-                  );
-                }}
-              >
-                {/* Thumbnail */}
-                <div className="relative h-48 bg-gradient-to-br from-electric/10 to-violet/10 overflow-hidden">
-                  {project.thumbnail ? (
-                    <img
-                      src={project.thumbnail}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-4xl font-heading font-bold gradient-text">
-                        {project.title.charAt(0)}
-                      </span>
-                    </div>
-                  )}
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-deep-dark/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          logClick(project._id);
-                        }}
-                        className="rounded-full p-3 bg-electric/20 text-electric hover:bg-electric/30 transition-colors"
-                      >
-                        <ExternalLink className="h-5 w-5" />
-                      </a>
-                    )}
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          logClick(project._id);
-                        }}
-                        className="rounded-full p-3 bg-violet/20 text-violet hover:bg-violet/30 transition-colors"
-                      >
-                        <Github className="h-5 w-5" />
-                      </a>
-                    )}
-                  </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6 space-y-3">
-                  <h3 className="font-heading text-xl font-semibold group-hover:text-electric transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
+              {/* Content Body */}
+              <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <h3 className="font-heading font-black text-xl text-heading group-hover:text-brand-primary transition-colors">
+                      {project.title}
+                    </h3>
+                  </div>
+                  <p className="text-xs sm:text-sm text-body leading-relaxed line-clamp-3 mt-2">
                     {project.description}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.techStack.slice(0, 4).map((tech) => (
-                      <Badge key={tech} variant="secondary" className="text-xs">
+                </div>
+
+                {/* Tech stack badges */}
+                <div className="pt-2 border-t border-border-subtle">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.techStack.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="text-[11px] font-semibold">
                         {tech}
                       </Badge>
                     ))}
-                    {project.techStack.length > 4 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{project.techStack.length - 4}
-                      </Badge>
-                    )}
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      )}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
-      {/* Project Detail Modal */}
+      {/* Project Detail Modal with Full Screenshot & Bullet Features */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-2xl glass-card border-border">
+        <DialogContent className="max-w-2xl bg-surface border-border-subtle">
           {selectedProject && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="font-heading text-2xl gradient-text">
-                  {selectedProject.title}
-                </DialogTitle>
-                <DialogDescription className="text-muted-foreground">
-                  {selectedProject.category}
-                </DialogDescription>
-              </DialogHeader>
-
+            <div className="space-y-5">
+              {/* Project Screenshot in Modal */}
               {selectedProject.thumbnail && (
-                <div className="rounded-lg overflow-hidden h-56">
+                <div className="rounded-xl overflow-hidden border border-border-subtle max-h-64 relative bg-surface-subtle">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedProject.thumbnail}
                     alt={selectedProject.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
+                  <div className="absolute top-3 right-3">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-color-success-subtle/95 backdrop-blur-sm border border-color-success/40 text-color-success text-[10px] font-bold shadow-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-color-success animate-pulse" />
+                      <span>Live Site</span>
+                    </span>
+                  </div>
                 </div>
               )}
 
-              <p className="text-muted-foreground leading-relaxed">
-                {selectedProject.description}
-              </p>
+              <DialogHeader>
+                <div className="inline-flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-subtle text-brand-primary border border-brand-primary/30">
+                    {selectedProject.timeline}
+                  </span>
+                </div>
+                <DialogTitle className="font-heading text-2xl font-black text-heading">
+                  {selectedProject.title}
+                </DialogTitle>
+                <DialogDescription className="text-body text-sm leading-relaxed mt-1">
+                  {selectedProject.description}
+                </DialogDescription>
+              </DialogHeader>
 
-              <div className="flex flex-wrap gap-2">
-                {selectedProject.techStack.map((tech) => (
-                  <Badge key={tech}>{tech}</Badge>
-                ))}
+              {/* Key Features Bullet List from CV */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
+                  Key Achievements &amp; Contributions
+                </h4>
+                <ul className="space-y-1.5 text-xs text-body">
+                  {selectedProject.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-brand-primary font-bold mt-0.5">•</span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="flex gap-3 pt-2">
+              {/* Technologies */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
+                  Technologies Used
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedProject.techStack.map((tech) => (
+                    <Badge key={tech} variant="brand" className="text-xs py-1">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3 pt-3 border-t border-border-subtle">
                 {selectedProject.liveUrl && (
-                  <Button variant="glow" asChild>
+                  <Button variant="primary" asChild>
                     <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="mr-2 h-4 w-4" /> Live Demo
+                      <ExternalLink className="mr-2 h-4 w-4" /> Visit Live Platform
                     </a>
                   </Button>
                 )}
                 {selectedProject.githubUrl && (
-                  <Button variant="outline" asChild>
+                  <Button variant="secondary" asChild>
                     <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
                       <Github className="mr-2 h-4 w-4" /> Source Code
                     </a>
                   </Button>
                 )}
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>

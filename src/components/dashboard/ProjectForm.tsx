@@ -197,7 +197,7 @@ export function ProjectForm({
               >
                 {isSubmitting ? (
                   <div className="flex flex-col items-center gap-2">
-                    <Loader2 className="h-8 w-8 animate-spin text-electric" />
+                    <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
                     <span className="text-sm text-muted-foreground font-medium">Processing...</span>
                   </div>
                 ) : (

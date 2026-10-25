@@ -4,28 +4,35 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-bold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow-blue",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "bg-brand-primary text-brand-on-primary hover:bg-brand-hover shadow-sm active:scale-95",
+        primary:
+          "bg-brand-primary text-brand-on-primary hover:bg-brand-hover shadow-sm active:scale-95",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        glow: "bg-gradient-to-r from-electric to-violet text-white hover:shadow-glow-violet",
+          "bg-surface-elevated text-heading hover:bg-surface-subtle border border-border-subtle active:scale-95",
+        outline:
+          "border border-border-subtle bg-transparent text-heading hover:border-brand-primary hover:bg-brand-subtle/40 active:scale-95",
+        ghost:
+          "text-body hover:text-heading hover:bg-surface-subtle",
+        destructive:
+          "bg-color-error text-white hover:opacity-90 shadow-sm active:scale-95",
+        success:
+          "bg-color-success text-white hover:opacity-90 shadow-sm active:scale-95",
+        glow:
+          "bg-brand-primary text-brand-on-primary hover:bg-brand-hover shadow-sm active:scale-95",
+        link:
+          "text-brand-primary underline-offset-4 hover:underline p-0 h-auto font-semibold",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-lg px-8",
-        xl: "h-12 rounded-lg px-10 text-base",
-        icon: "h-10 w-10",
+        default: "h-10 px-5 py-2",
+        sm: "h-8.5 rounded-lg px-3.5 text-xs",
+        lg: "h-11 rounded-xl px-7 text-sm font-bold",
+        xl: "h-12 rounded-xl px-9 text-base font-bold",
+        icon: "h-10 w-10 rounded-xl",
       },
     },
     defaultVariants: {

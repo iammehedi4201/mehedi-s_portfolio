@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Syne, Rajdhani } from "next/font/google";
+import { Manrope, Inter, Syne } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,31 +18,31 @@ const inter = Inter({
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const rajdhani = Rajdhani({
-  subsets: ["latin"],
-  variable: "--font-rajdhani",
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Mehedi Hasan | Full-Stack Developer",
+  title: "Mehedi Hasan | Software Engineer",
   description:
-    "Full-stack developer portfolio showcasing modern web applications built with Next.js, React, Node.js, and more.",
+    "Portfolio of Mehedi Hasan, a Software Engineer specializing in Next.js, React, Express.js, MongoDB, scalable web applications, and dynamic CMS architectures.",
   keywords: [
-    "developer",
-    "portfolio",
-    "full-stack",
+    "Mehedi Hasan",
+    "Software Engineer",
+    "Full-Stack Developer",
     "Next.js",
     "React",
+    "Express.js",
+    "MongoDB",
     "TypeScript",
+    "Antopolis",
+    "Daffodil International University",
+    "Dhaka Bangladesh",
   ],
+  authors: [{ name: "Mehedi Hasan" }],
   openGraph: {
-    title: "Mehedi Hasan | Full-Stack Developer",
+    title: "Mehedi Hasan | Software Engineer",
     description:
-      "Full-stack developer portfolio showcasing modern web applications.",
+      "Software Engineer specializing in Next.js, React, Express.js, and MongoDB. Building scalable web platforms with clean architecture.",
     type: "website",
     locale: "en_US",
   },
@@ -50,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${syne.variable} ${rajdhani.variable} font-body antialiased`}
+        className={`${manrope.variable} ${inter.variable} ${syne.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden`}
       >
         <ThemeProvider
           attribute="class"

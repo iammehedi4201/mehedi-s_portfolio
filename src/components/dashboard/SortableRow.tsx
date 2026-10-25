@@ -58,8 +58,8 @@ export function SortableRow({
       </div>
       
       <div className="flex items-center gap-3 min-w-0">
-        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-electric/20 to-violet/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-xs font-bold gradient-text">
+        <div className="w-10 h-10 rounded-lg bg-surface-elevated border border-border-subtle flex items-center justify-center flex-shrink-0">
+          <span className="text-xs font-bold font-mono text-brand-primary">
             {project.title.charAt(0)}
           </span>
         </div>

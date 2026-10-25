@@ -101,8 +101,8 @@ export default function DashboardSettingsPage() {
                   }}
                   className={`flex flex-col items-center gap-2 rounded-xl border p-4 transition-all ${
                     theme === value
-                      ? "border-violet bg-violet/10"
-                      : "border-white/[0.06] hover:border-white/[0.12] bg-white/[0.02]"
+                      ? "border-brand-primary bg-brand-primary/10 text-brand-primary font-semibold"
+                      : "border-border-subtle hover:border-border-strong bg-surface text-text-muted hover:text-text-heading"
                   }`}
                 >
                   <Icon className="h-5 w-5" />

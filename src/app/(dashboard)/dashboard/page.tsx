@@ -137,26 +137,26 @@ export default function DashboardOverview() {
           <CardContent className="flex flex-wrap gap-3">
             <a
               href="/dashboard/projects"
-              className="px-4 py-2 rounded-lg bg-electric/10 text-electric text-sm font-medium hover:bg-electric/20 transition-colors"
+              className="px-4 py-2 rounded-lg bg-brand-primary text-brand-on-primary text-sm font-semibold hover:bg-brand-hover transition-colors shadow-sm"
             >
               + New Project
             </a>
             <a
               href="/dashboard/messages"
-              className="px-4 py-2 rounded-lg bg-violet/10 text-violet text-sm font-medium hover:bg-violet/20 transition-colors"
+              className="px-4 py-2 rounded-lg bg-surface-elevated border border-border-subtle text-text-heading text-sm font-medium hover:border-brand-primary transition-colors"
             >
               View Messages
             </a>
             <a
               href="/dashboard/cv"
-              className="px-4 py-2 rounded-lg bg-cyan/10 text-cyan text-sm font-medium hover:bg-cyan/20 transition-colors"
+              className="px-4 py-2 rounded-lg bg-surface-elevated border border-border-subtle text-text-heading text-sm font-medium hover:border-brand-primary transition-colors"
             >
               Update CV
             </a>
             <a
               href="/"
               target="_blank"
-              className="px-4 py-2 rounded-lg bg-white/[0.06] text-muted-foreground text-sm font-medium hover:bg-white/[0.1] transition-colors"
+              className="px-4 py-2 rounded-lg bg-surface-subtle border border-border-subtle text-text-muted text-sm font-medium hover:text-text-heading transition-colors"
             >
               Visit Portfolio →
             </a>

@@ -97,7 +97,7 @@ export default function DashboardMessagesPage() {
               >
                 <Card
                   className={`bg-dash-card border-white/[0.06] cursor-pointer hover:border-white/[0.12] transition-all ${
-                    selected?._id === message._id ? "ring-1 ring-violet" : ""
+                    selected?._id === message._id ? "ring-1 ring-brand-primary" : ""
                   }`}
                   onClick={() => {
                     setSelected(message);
@@ -109,7 +109,7 @@ export default function DashboardMessagesPage() {
                     <div className="pt-1.5">
                       <div
                         className={`w-2.5 h-2.5 rounded-full ${
-                          message.isRead ? "bg-transparent" : "bg-electric"
+                          message.isRead ? "bg-transparent" : "bg-brand-primary"
                         }`}
                       />
                     </div>
@@ -174,7 +174,7 @@ export default function DashboardMessagesPage() {
                         <Mail className="h-3.5 w-3.5 text-muted-foreground" />
                         <a
                           href={`mailto:${selected.email}`}
-                          className="text-electric hover:underline"
+                          className="text-brand-primary hover:underline"
                         >
                           {selected.email}
                         </a>

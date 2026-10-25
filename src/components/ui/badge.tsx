@@ -1,33 +1,49 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const Badge = React.forwardRef<
-  HTMLSpanElement,
-  React.HTMLAttributes<HTMLSpanElement> & {
-    variant?: "default" | "secondary" | "outline" | "success" | "warning";
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?:
+    | "default"
+    | "brand"
+    | "feature"
+    | "secondary"
+    | "outline"
+    | "success"
+    | "warning"
+    | "info"
+    | "error";
+}
+
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant = "default", ...props }, ref) => {
+    return (
+      <span
+        ref={ref}
+        className={cn(
+          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold transition-colors select-none",
+          {
+            "bg-brand-subtle text-brand-primary border border-brand-primary/30":
+              variant === "default" || variant === "brand" || variant === "feature",
+            "bg-surface-subtle text-heading border border-border-subtle":
+              variant === "secondary",
+            "border border-border-subtle text-body bg-transparent":
+              variant === "outline",
+            "bg-color-success-subtle text-color-success border border-color-success/30":
+              variant === "success",
+            "bg-color-warning-subtle text-color-warning border border-color-warning/30":
+              variant === "warning",
+            "bg-color-info-subtle text-color-info border border-color-info/30":
+              variant === "info",
+            "bg-color-error-subtle text-color-error border border-color-error/30":
+              variant === "error",
+          },
+          className
+        )}
+        {...props}
+      />
+    );
   }
->(({ className, variant = "default", ...props }, ref) => {
-  return (
-    <span
-      ref={ref}
-      className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
-        {
-          "bg-primary/10 text-primary border border-primary/20":
-            variant === "default",
-          "bg-secondary text-secondary-foreground": variant === "secondary",
-          "border border-border text-foreground": variant === "outline",
-          "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20":
-            variant === "success",
-          "bg-amber-500/10 text-amber-400 border border-amber-500/20":
-            variant === "warning",
-        },
-        className
-      )}
-      {...props}
-    />
-  );
-});
+);
 Badge.displayName = "Badge";
 
 export { Badge };

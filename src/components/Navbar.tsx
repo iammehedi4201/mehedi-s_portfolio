@@ -3,25 +3,29 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Terminal, FileText } from "lucide-react";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Timeline", href: "#timeline" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/#about" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Timeline", href: "/#timeline" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    setMounted(true);
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -29,95 +33,134 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
         className={cn(
-          "fixed top-4 left-0 right-0 z-50 transition-all duration-300 pointer-events-none px-4 sm:px-6 lg:px-8",
-          scrolled ? "top-2" : "top-4"
+          "fixed left-0 right-0 z-50 transition-all duration-200 pointer-events-none px-4 sm:px-6 lg:px-8",
+          scrolled ? "top-3" : "top-5"
         )}
       >
-        <nav className={cn(
-          "mx-auto max-w-4xl flex items-center justify-between h-14 rounded-full border border-white/10 px-6 transition-all duration-500 pointer-events-auto shadow-2xl backdrop-blur-md",
-          scrolled 
-            ? "bg-background/60 shadow-primary/5" 
-            : "bg-white/5 shadow-none"
-        )}>
-          {/* Logo */}
-          <a href="#" className="font-heading text-xl font-bold tracking-tighter hover:scale-105 transition-transform">
-            MEHEDI<span className="text-primary">.</span>
-          </a>
+        <nav
+          className={cn(
+            "mx-auto max-w-5xl flex items-center justify-between h-14 rounded-2xl border transition-colors duration-200 pointer-events-auto px-5 sm:px-6 shadow-card",
+            scrolled
+              ? "bg-secondary/40 backdrop-blur-xl border-white/10"
+              : "bg-transparent border-transparent"
+          )}
+        >
+          {/* Brand Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 group cursor-pointer select-none"
+          >
+            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-primary">
+              <Terminal className="w-4 h-4" />
+            </div>
+            <span className="font-heading font-black text-base sm:text-lg tracking-tight text-heading">
+              MEHEDI<span className="text-brand-primary font-black">.</span>
+            </span>
+          </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-xs font-heading font-semibold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors relative group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-primary transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={cn(
+                    "text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200",
+                    isActive
+                      ? "text-brand-primary font-bold bg-brand-subtle"
+                      : "text-body hover:text-heading hover:bg-surface-elevated"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-full p-2 text-muted-foreground hover:text-primary transition-colors"
+          {/* Right Action Icons & CTA */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* View Resume Button in Navbar */}
+            <a
+              href="/Mehedi_Hasan_CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle hover:border-brand-primary transition-colors shadow-sm"
+              title="View Resume in new tab"
             >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
-
-            <a 
-              href="#contact" 
-              className="hidden md:block text-xs font-heading font-bold uppercase tracking-widest bg-white text-black px-5 py-2 rounded-full hover:bg-primary transition-colors"
-            >
-              Hire
+              <FileText className="w-3.5 h-3.5 text-brand-primary" />
+              <span>Resume</span>
             </a>
 
-            {/* Mobile hamburger */}
+            {/* Theme Toggle (Solid) */}
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                aria-label="Toggle theme"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-body hover:text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle transition-colors cursor-pointer"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4 text-brand-primary" />
+                ) : (
+                  <Moon className="h-4 w-4 text-brand-primary" />
+                )}
+              </button>
+            )}
+
+            {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden rounded-lg p-2 text-foreground hover:text-primary transition-colors"
+              aria-label="Toggle menu"
+              className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle transition-colors"
             >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </nav>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer Menu (Solid) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-30 pt-16 bg-deep-dark/95 backdrop-blur-xl md:hidden"
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-4 top-20 z-40 p-6 rounded-2xl bg-surface border border-border-subtle shadow-card md:hidden"
           >
-            <div className="flex flex-col items-center gap-6 pt-12">
+            <div className="flex flex-col gap-3">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-xl font-heading text-foreground hover:text-electric transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-heading hover:bg-surface-elevated hover:text-brand-primary transition-colors"
                 >
-                  {link.label}
-                </a>
+                  <span>{link.label}</span>
+                </Link>
               ))}
-              <Button variant="glow" size="lg" asChild>
-                <a href="#contact" onClick={() => setMobileOpen(false)}>
-                  Hire Me
+
+              <div className="pt-2 border-t border-border-subtle">
+                <a
+                  href="/Mehedi_Hasan_CV.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-brand-primary bg-brand-subtle border border-brand-primary/30"
+                >
+                  <span className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    View Resume (CV)
+                  </span>
+                  <span className="text-xs">PDF</span>
                 </a>
-              </Button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -125,3 +168,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export { Navbar as Nav };
