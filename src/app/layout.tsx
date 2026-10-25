@@ -46,6 +46,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
   },
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -55,6 +63,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png?v=3" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png?v=3" />
+        <link rel="apple-touch-icon" href="/icon-180.png?v=3" />
+      </head>
       <body
         className={`${manrope.variable} ${inter.variable} ${syne.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden`}
       >
