@@ -127,42 +127,6 @@ export default function DashboardOverview() {
               );
             })}
       </div>
-
-      {/* Quick Actions */}
-      <motion.div {...fadeUp} transition={{ duration: 0.4, delay: 0.5 }}>
-        <Card className="bg-dash-card border-white/[0.06]">
-          <CardHeader>
-            <CardTitle className="text-base">Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            <a
-              href="/dashboard/projects"
-              className="px-4 py-2 rounded-lg bg-brand-primary text-brand-on-primary text-sm font-semibold hover:bg-brand-hover transition-colors shadow-sm"
-            >
-              + New Project
-            </a>
-            <a
-              href="/dashboard/messages"
-              className="px-4 py-2 rounded-lg bg-surface-elevated border border-border-subtle text-text-heading text-sm font-medium hover:border-brand-primary transition-colors"
-            >
-              View Messages
-            </a>
-            <a
-              href="/dashboard/cv"
-              className="px-4 py-2 rounded-lg bg-surface-elevated border border-border-subtle text-text-heading text-sm font-medium hover:border-brand-primary transition-colors"
-            >
-              Update CV
-            </a>
-            <a
-              href="/"
-              target="_blank"
-              className="px-4 py-2 rounded-lg bg-surface-subtle border border-border-subtle text-text-muted text-sm font-medium hover:text-text-heading transition-colors"
-            >
-              Visit Portfolio →
-            </a>
-          </CardContent>
-        </Card>
-      </motion.div>
     </div>
   );
 }

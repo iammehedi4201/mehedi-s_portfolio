@@ -1,0 +1,11 @@
+{
+  "id": "radiant-rose",
+  "name": "Radiant Rose",
+  "primary": "#F43F5E",
+  "hover": "#E11D48",
+  "subtle": "#4C0519",
+  "onPrimary": "#FFFFFF",
+  "hsl": "350 89% 60%",
+  "description": "Bold dynamic crimson accent",
+  "updatedAt": "2026-10-26T05:42:41.837Z"
+}

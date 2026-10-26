@@ -68,6 +68,29 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png?v=3" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png?v=3" />
         <link rel="apple-touch-icon" href="/icon-180.png?v=3" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+              try {
+                var s = localStorage.getItem("portfolio_brand_primary");
+                if (s) {
+                  var t = JSON.parse(s);
+                  if (t && t.primary) {
+                    var r = document.documentElement;
+                    r.style.setProperty("--brand-primary", t.primary);
+                    if (t.hover) r.style.setProperty("--brand-hover", t.hover);
+                    if (t.subtle) r.style.setProperty("--brand-subtle", t.subtle);
+                    if (t.onPrimary) r.style.setProperty("--brand-on-primary", t.onPrimary);
+                    if (t.hsl) {
+                      r.style.setProperty("--primary", t.hsl);
+                      r.style.setProperty("--ring", t.hsl);
+                    }
+                  }
+                }
+              } catch(e){}
+            })()`,
+          }}
+        />
       </head>
       <body
         className={`${manrope.variable} ${inter.variable} ${syne.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden`}

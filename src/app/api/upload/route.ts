@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
+    const target = formData.get("target") as string | null;
 
     if (!file) {
       return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
@@ -23,18 +24,28 @@ export async function POST(req: NextRequest) {
 
     // Sanitize extension and filename
     const ext = path.extname(file.name) || ".png";
-    const cleanExt = [".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"].includes(ext.toLowerCase())
-      ? ext.toLowerCase()
-      : ".png";
-    const filename = `project_${Date.now()}_${Math.random().toString(36).substring(2, 8)}${cleanExt}`;
+    const allowedExts = [".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif", ".pdf"];
+    const cleanExt = allowedExts.includes(ext.toLowerCase()) ? ext.toLowerCase() : ".png";
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
+    let publicUrl = "";
 
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
+    // If uploading the primary CV directly
+    if (target === "cv" && cleanExt === ".pdf") {
+      const cvPath = path.join(process.cwd(), "public", "Mehedi_Hasan_CV.pdf");
+      await fs.writeFile(cvPath, buffer);
+      publicUrl = "/Mehedi_Hasan_CV.pdf";
+    } else {
+      const uploadDir = path.join(process.cwd(), "public", "uploads");
+      await fs.mkdir(uploadDir, { recursive: true });
 
-    const publicUrl = `/uploads/${filename}`;
+      const prefix = cleanExt === ".pdf" ? "cv" : "project";
+      const filename = `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}${cleanExt}`;
+      const filePath = path.join(uploadDir, filename);
+      await fs.writeFile(filePath, buffer);
+
+      publicUrl = `/uploads/${filename}`;
+    }
+
     return NextResponse.json({ success: true, url: publicUrl });
   } catch (error) {
     console.error("Local upload error:", error);

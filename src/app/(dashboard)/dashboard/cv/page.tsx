@@ -1,277 +1,341 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { FileText, Save, ExternalLink, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-const CV_CATEGORIES = [
-  { id: "frontend", label: "Frontend Developer" },
-  { id: "backend", label: "Backend Developer" },
-  { id: "fullstack", label: "Fullstack Developer" },
-  { id: "mernstack", label: "MERN Stack Developer" },
-  { id: "react", label: "React Developer" },
-] as const;
-
-type CvCategory = typeof CV_CATEGORIES[number]["id"];
+import {
+  FileText,
+  ExternalLink,
+  Download,
+  Copy,
+  Check,
+  RefreshCw,
+  CloudUpload,
+  CheckCircle2,
+  FileCheck,
+  Sliders,
+  Sparkles,
+} from "lucide-react";
 
 export default function CVManagerPage() {
-  const [cvUrl, setCvUrl] = useState(""); // The active one
-  const [activeCategory, setActiveCategory] = useState(""); // The ID of selected category
-  const [cvLinks, setCvLinks] = useState<Record<CvCategory, string>>({
-    frontend: "",
-    backend: "",
-    fullstack: "",
-    mernstack: "",
-    react: "",
-  });
+  const [cvUrl, setCvUrl] = useState("/Mehedi_Hasan_CV.pdf");
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [iframeKey, setIframeKey] = useState(1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch("/api/cv")
+    fetch("/api/cv", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        if (json.success) {
-          setCvUrl(json.cvUrl || "");
-          setActiveCategory(json.activeCategory || "");
-          if (json.cvLinks) setCvLinks(json.cvLinks);
+        if (json.success && json.cvUrl) {
+          setCvUrl(json.cvUrl);
         }
       })
-      .catch(() => toast.error("Failed to fetch CV"))
+      .catch(() => toast.error("Failed to load CV configuration"))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+  const uploadPdfFile = async (file: File) => {
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
+      toast.error("Please select a valid PDF document (.pdf)");
+      return;
+    }
+
+    setUploading(true);
+    const toastId = toast.loading("Uploading new CV PDF to portfolio...");
+
     try {
-      const res = await fetch("/api/cv", {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("target", "cv");
+
+      const res = await fetch("/api/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cvUrl, cvLinks, activeCategory }),
+        body: formData,
       });
+
       const json = await res.json();
-      if (json.success) {
-        toast.success("CV settings updated");
+      if (res.ok && json.success) {
+        const timestampedUrl = `${json.url}?t=${Date.now()}`;
+        setCvUrl(timestampedUrl);
+        setIframeKey((prev) => prev + 1);
+
+        // Auto-save the new link in settings
+        await fetch("/api/cv", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cvUrl: json.url }),
+        });
+
+        toast.dismiss(toastId);
+        toast.success("New CV uploaded and published successfully!");
       } else {
-        toast.error(json.error || "Failed to update CV");
+        toast.dismiss(toastId);
+        toast.error(json.error || "Failed to upload CV");
       }
     } catch {
-      toast.error("An error occurred");
+      toast.dismiss(toastId);
+      toast.error("Network error during file upload");
     } finally {
-      setSaving(false);
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
-  const selectActive = (catId: CvCategory) => {
-    const url = cvLinks[catId];
-    if (!url) {
-      toast.error("Please provide a URL first");
-      return;
-    }
-    if (activeCategory === catId) {
-      // Unselect current category
-      setActiveCategory("");
-      setCvUrl("");
-      toast.success("CV unselected. Click Save to persist the change.");
-      return;
-    }
-
-    setCvUrl(url);
-    setActiveCategory(catId);
-    toast.success(`${catId} CV selected. Don't forget to Save!`);
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) uploadPdfFile(file);
   };
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) uploadPdfFile(file);
+  }, []);
+
+  const handleCopyLink = () => {
+    const cleanUrl = cvUrl.split("?")[0];
+    const fullUrl = cleanUrl.startsWith("http")
+      ? cleanUrl
+      : `${window.location.origin}${cleanUrl}`;
+    navigator.clipboard.writeText(fullUrl);
+    setCopied(true);
+    toast.success("Public CV link copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const cleanDisplayUrl = cvUrl.split("?")[0];
+  const cleanFileName = cleanDisplayUrl.split("/").pop() || "Mehedi_Hasan_CV.pdf";
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="flex flex-col items-center justify-center h-72 gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary" />
+        <p className="text-xs text-muted-foreground">Loading CV configuration...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 w-full">
-      <div className="flex justify-between items-end">
+    <div className="space-y-4 w-full h-full flex flex-col">
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf"
+        className="hidden"
+        onChange={handleFileUpload}
+      />
+
+      {/* Top Header Row — Balanced & Clean */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
         <div>
-          <h1 className="text-2xl font-heading font-bold">CV Manager</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage multiple CV versions and select which one to show on your portfolio.
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-heading font-bold text-foreground tracking-tight">
+              CV Manager
+            </h1>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live on Portfolio
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Manage your public portfolio resume document, upload revisions, and view real-time preview.
           </p>
         </div>
-        <Button onClick={handleUpdate} disabled={saving} size="sm" className="hidden md:flex">
-          <Save className="mr-2 h-4 w-4" />
-          {saving ? "Saving..." : "Save All Changes"}
-        </Button>
+
+        {/* Global Resource Indicator Badge */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface border border-border-subtle text-xs">
+          <Sparkles className="h-3.5 w-3.5 text-brand-primary" />
+          <span className="text-muted-foreground">Linked File:</span>
+          <span className="font-mono text-foreground font-medium">{cleanDisplayUrl}</span>
+        </div>
       </div>
 
-      <div className="grid gap-6">
-        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="bg-dash-card border-white/[0.06]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-emerald-500" /> Currently Active CV
-                </div>
-                {cvUrl ? (
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
-                    Published
-                  </span>
-                ) : (
-                  <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">
-                    None Selected
-                  </span>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
-                <Input
-                  readOnly
-                  placeholder="Select a category CV below to set as active..."
-                  value={cvUrl}
-                  className="bg-black/20 border-white/[0.05] text-muted-foreground italic"
-                />
-                {cvUrl && (
-                  <Button type="button" variant="outline" size="icon" asChild>
-                    <a href={cvUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                )}
+      {/* Dual Studio Workspace — Equal Height Columns (4-col Left / 8-col Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch flex-1 min-h-0 w-full">
+        {/* LEFT COLUMN: Unified Management Studio Panel */}
+        <div className="lg:col-span-4 xl:col-span-4 flex flex-col">
+          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-175px)] min-h-[720px]">
+            {/* Matching Panel Header */}
+            <div className="h-12 px-4 py-3 border-b border-border-subtle bg-surface-elevated flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <Sliders className="h-4 w-4 text-brand-primary" />
+                <span className="text-xs font-bold text-foreground uppercase tracking-wider">
+                  Resume Controls
+                </span>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Publicly Active
+              </span>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          {CV_CATEGORIES.map((cat, idx) => (
-            <motion.div
-              key={cat.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
-            >
-              <Card className={cn(
-                "bg-dash-card/50 border-white/[0.04] transition-all",
-                activeCategory === cat.id ? "border-emerald-500/30 ring-1 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]" : ""
-              )}>
-                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                  <Label className="text-sm font-semibold">{cat.label}</Label>
-                  {activeCategory === cat.id && (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  )}
-                </CardHeader>
-                <CardContent className="px-4 pb-4 space-y-3">
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Input
-                        placeholder="Paste link here..."
-                        value={cvLinks[cat.id] || ""}
-                        onChange={(e) => setCvLinks({ ...cvLinks, [cat.id]: e.target.value })}
-                        className="text-xs h-9 pr-14"
-                      />
-                      <div className="absolute right-0 top-0 h-full flex items-center pr-2 gap-1.5">
-                        {cvLinks[cat.id] && (
-                          <a 
-                            href={cvLinks[cat.id]} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-primary transition-colors p-1"
-                            title="Preview Link"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
-                        )}
-                      </div>
+            {/* Panel Body: Cohesive, structured, zero awkward voids */}
+            <div className="flex-1 p-4 sm:p-5 flex flex-col gap-4 overflow-y-auto justify-between">
+              {/* Section 1: Active Document Info & Primary Actions */}
+              <div className="space-y-3">
+                <div className="p-3.5 rounded-xl bg-surface-elevated/70 border border-border-subtle">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex flex-col items-center justify-center text-red-400 shrink-0">
+                      <FileText className="h-4 w-4" />
+                      <span className="text-[8px] font-bold tracking-wider uppercase -mt-0.5">PDF</span>
                     </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-xs font-bold text-foreground truncate" title={cleanFileName}>
+                          {cleanFileName}
+                        </h3>
+                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-medium bg-surface-subtle text-muted-foreground border border-border-subtle shrink-0">
+                          194.7 KB
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1.5">
+                        <CheckCircle2 className="h-3 w-3 text-emerald-400 shrink-0" />
+                        <span>Verified Antopolis &amp; VIPB AMC</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Immediate Action Buttons (Download & Copy Link directly connected to file) */}
+                  <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-border-subtle">
                     <Button
                       type="button"
-                      variant={activeCategory === cat.id ? "secondary" : "outline"}
                       size="sm"
-                      onClick={() => selectActive(cat.id)}
-                      className="h-9 whitespace-nowrap text-xs"
-                      disabled={!cvLinks[cat.id]}
+                      asChild
+                      className="h-8 text-xs font-semibold bg-brand-primary hover:bg-brand-hover text-brand-on-primary transition-colors"
                     >
-                      {activeCategory === cat.id ? "Selected" : "Select"}
+                      <a href={cvUrl} download={cleanFileName}>
+                        <Download className="mr-1.5 h-3.5 w-3.5" /> Download
+                      </a>
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyLink}
+                      className="h-8 text-xs border-border-subtle hover:bg-surface-elevated text-foreground"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="mr-1.5 h-3.5 w-3.5 text-emerald-400" /> Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" /> Copy Link
+                        </>
+                      )}
                     </Button>
                   </div>
-                  {cvLinks[cat.id] && (
-                    <div className="mt-2 space-y-2">
-                      <div className="bg-black/30 border border-white/5 rounded-md p-2 flex items-center justify-between group overflow-hidden">
-                        <div className="flex items-center gap-2 truncate">
-                          <div className="bg-primary/10 p-1.5 rounded text-primary">
-                            <ExternalLink className="h-3 w-3" />
-                          </div>
-                          <span className="text-[10px] text-muted-foreground truncate max-w-[180px]">
-                            {cvLinks[cat.id]}
-                          </span>
-                        </div>
-                        <a 
-                          href={cvLinks[cat.id]} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-[10px] bg-primary/20 hover:bg-primary text-primary hover:text-white px-2 py-1 rounded transition-all font-medium flex items-center gap-1"
-                        >
-                          Preview <ExternalLink className="h-2.5 w-2.5" />
-                        </a>
-                      </div>
-                      
-                      {/* CV Thumbnail Visualizer - Styled like Google Drive Card */}
-                      <div className="relative aspect-[4/3] w-full bg-[#E8F0FE] rounded-xl overflow-hidden shadow-sm border border-[#D2E3FC] p-4 group/preview">
-                        {/* Status bar mock */}
-                        <div className="absolute top-3 left-4 right-4 flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-[#EA4335] p-1 rounded text-white shadow-sm">
-                              <FileText className="h-3.5 w-3.5" />
-                            </div>
-                            <span className="text-[11px] font-medium text-[#1A73E8] truncate max-w-[120px]">
-                              Mehedi&apos;s CV.pdf
-                            </span>
-                          </div>
-                          <div className="bg-[#1A73E8]/10 hover:bg-[#1A73E8]/20 p-1.5 rounded-full text-[#1A73E8] transition-colors cursor-pointer">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                          </div>
-                        </div>
+                </div>
+              </div>
 
-                        {/* White Paper Mock with actual Iframe */}
-                        <div className="mt-8 w-full h-[180%] bg-white rounded-t-sm shadow-md overflow-hidden ring-1 ring-black/5">
-                          {cvLinks[cat.id].includes('drive.google.com') ? (
-                            <iframe 
-                              src={cvLinks[cat.id].replace('/view', '/preview')} 
-                              className="w-full h-full border-0 pointer-events-none opacity-90 group-hover/preview:opacity-100 transition-opacity"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="absolute inset-x-4 top-12 bottom-4 flex flex-col items-center justify-center text-center p-4 bg-white">
-                                <FileText className="h-10 w-10 text-[#EA4335] mb-2" />
-                                <p className="text-[11px] text-[#5F6368] font-medium px-4">Previewing External Link...</p>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Overlay to prevent interaction with iframe inside card */}
-                        <div className="absolute inset-0 z-10" />
-                      </div>
-                    </div>
+              {/* Section 2: Flex-Stretching Drag & Drop Upload Zone (Takes available space seamlessly) */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`flex-1 min-h-[170px] border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2.5 ${
+                  isDragging
+                    ? "border-brand-primary bg-brand-primary/10 scale-[1.01]"
+                    : "border-border-subtle bg-surface-subtle/30 hover:bg-surface-elevated/80 hover:border-brand-primary/50"
+                }`}
+              >
+                <div className="w-11 h-11 rounded-2xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary transition-transform group-hover:scale-105">
+                  {uploading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-brand-primary" />
+                  ) : (
+                    <CloudUpload className="h-5 w-5" />
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-foreground">
+                    {uploading ? "Uploading & Publishing..." : "Upload New Resume PDF"}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Drag &amp; drop file here, or <span className="text-brand-primary font-semibold underline">browse</span>
+                  </p>
+                </div>
+                <span className="text-[10px] font-mono text-muted-foreground bg-surface-subtle px-2 py-0.5 rounded-full border border-border-subtle">
+                  Overwrites live portfolio CV • Max 10MB
+                </span>
+              </div>
+            </div>
+          </Card>
         </div>
 
-        <div className="flex md:hidden justify-end">
-          <Button onClick={handleUpdate} disabled={saving} className="w-full">
-            <Save className="mr-2 h-4 w-4" />
-            {saving ? "Saving..." : "Save All Changes"}
-          </Button>
+        {/* RIGHT COLUMN: Live Document Viewer Panel */}
+        <div className="lg:col-span-8 xl:col-span-8 flex flex-col">
+          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-175px)] min-h-[720px]">
+            {/* Matching Toolbar Header */}
+            <div className="h-12 px-4 py-3 border-b border-border-subtle bg-surface-elevated flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <FileCheck className="h-4 w-4 text-brand-primary" />
+                <span className="text-xs font-bold text-foreground">Live Document Preview</span>
+                <span className="text-[11px] text-muted-foreground font-mono hidden sm:inline">
+                  ({cleanDisplayUrl})
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs text-muted-foreground hover:text-foreground hover:bg-surface-subtle px-2"
+                  onClick={() => setIframeKey((prev) => prev + 1)}
+                  title="Reload preview"
+                >
+                  <RefreshCw className="mr-1.5 h-3 w-3" /> Refresh
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="h-7 text-xs text-muted-foreground hover:text-foreground hover:bg-surface-subtle px-2"
+                  title="Open full screen in new tab"
+                >
+                  <a href={cvUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-1.5 h-3 w-3" /> Full Screen
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            {/* PDF Viewer Frame — Soothing warm off-white canvas with dark theme backdrop */}
+            <div className="flex-1 w-full bg-[#1e1e22] relative overflow-hidden">
+              <iframe
+                key={`${cvUrl}-${iframeKey}`}
+                src={`${cvUrl}#toolbar=0&navpanes=0&view=Fit`}
+                title="Mehedi Hasan CV Preview"
+                className="w-full h-full border-0 absolute inset-0"
+                style={{
+                  filter: "sepia(0.24) brightness(0.92) contrast(1.02)",
+                }}
+              />
+            </div>
+          </Card>
         </div>
       </div>
     </div>
