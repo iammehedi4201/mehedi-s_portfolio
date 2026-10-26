@@ -135,7 +135,7 @@ export default function CVManagerPage() {
   }
 
   return (
-    <div className="space-y-4 w-full h-full flex flex-col">
+    <div className="space-y-3 w-full h-full flex flex-col">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -174,7 +174,7 @@ export default function CVManagerPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch flex-1 min-h-0 w-full">
         {/* LEFT COLUMN: Unified Management Studio Panel */}
         <div className="lg:col-span-4 xl:col-span-4 flex flex-col">
-          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-175px)] min-h-[720px]">
+          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-190px)] min-h-[500px]">
             {/* Matching Panel Header */}
             <div className="h-12 px-4 py-3 border-b border-border-subtle bg-surface-elevated flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function CVManagerPage() {
 
         {/* RIGHT COLUMN: Live Document Viewer Panel */}
         <div className="lg:col-span-8 xl:col-span-8 flex flex-col">
-          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-175px)] min-h-[720px]">
+          <Card className="bg-surface border-border-subtle rounded-2xl overflow-hidden shadow-card flex flex-col h-[calc(100vh-190px)] min-h-[500px]">
             {/* Matching Toolbar Header */}
             <div className="h-12 px-4 py-3 border-b border-border-subtle bg-surface-elevated flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
