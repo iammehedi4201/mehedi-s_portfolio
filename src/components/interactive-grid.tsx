@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { GridLightEffect } from "@/components/GridLightEffect";
 
 interface InteractiveGridProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -40,6 +41,9 @@ export function InteractiveGrid({
         </defs>
         <rect width="100%" height="100%" fill="url(#arch-grid-pattern)" />
       </svg>
+
+      {/* Subtle Animated Golden Light Effect Traveling Along Grid Lines */}
+      <GridLightEffect gridSize={gridSize} />
 
       {/* Content wrapper */}
       <div className="relative z-10">{children}</div>

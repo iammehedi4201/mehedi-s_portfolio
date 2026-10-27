@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Linkedin, Mail, Sparkles, Code2, ArrowRight } from "lucide-react";
+import { GridLightEffect } from "@/components/GridLightEffect";
 
 /* ===== Scramble text effect ===== */
 function useScrambleText(text: string, speed = 30) {
@@ -104,9 +105,11 @@ export default function HeroSection() {
       <div className="absolute inset-0 aurora-bg opacity-40 mix-blend-overlay" />
       <div className="absolute inset-0 bg-deep-dark/40" />
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-150 contrast-150" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+      {/* Grid Pattern Overlay with Subtle Animated Golden Light Sparks */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-150 contrast-150 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none">
+        <GridLightEffect gridSize={24} />
+      </div>
 
       {/* Floating orbs */}
       <motion.div
