@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "msg_1793386913044_5ba5",
+    "name": "Alex Rivera",
+    "email": "alex@techcraft.io",
+    "subject": "Contract Opportunity",
+    "body": "Hi Mehedi, we have an exciting Next.js and React project!",
+    "isRead": true,
+    "createdAt": "2026-10-30T19:01:53.044Z"
+  },
+  {
+    "_id": "msg_1793386542534_p9wp",
+    "name": "Sarah Jenkins",
+    "email": "sarah@example.com",
+    "subject": "Project Inquiry",
+    "body": "Hello Mehedi, I loved your portfolio and would like to discuss a project!",
+    "isRead": true,
+    "createdAt": "2026-10-30T18:55:42.534Z"
+  }
+]

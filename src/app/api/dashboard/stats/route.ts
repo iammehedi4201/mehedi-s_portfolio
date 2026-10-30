@@ -6,6 +6,7 @@ import Project from "@/lib/models/Project";
 import Message from "@/lib/models/Message";
 import AnalyticsEvent from "@/lib/models/AnalyticsEvent";
 import { projectStore } from "@/lib/storage/projectStore";
+import { messageStore } from "@/lib/storage/messageStore";
 
 // GET /api/dashboard/stats — Protected: aggregated dashboard stats
 export async function GET() {
@@ -64,12 +65,19 @@ export async function GET() {
           }),
         ]);
 
-      const viewsTrend = previousViews
-        ? Math.round(((recentViews - previousViews) / previousViews) * 100)
-        : 0;
-      const clicksTrend = previousClicks
-        ? Math.round(((recentClicks - previousClicks) / previousClicks) * 100)
-        : 0;
+      const viewsTrend =
+        previousViews > 0
+          ? Math.round(((recentViews - previousViews) / previousViews) * 100)
+          : recentViews > 0
+          ? 100
+          : 0;
+
+      const clicksTrend =
+        previousClicks > 0
+          ? Math.round(((recentClicks - previousClicks) / previousClicks) * 100)
+          : recentClicks > 0
+          ? 100
+          : 0;
 
       return NextResponse.json({
         success: true,
@@ -90,6 +98,8 @@ export async function GET() {
       const allProjects = await projectStore.getAll({ includeDrafts: true });
       const published = allProjects.filter((p) => p.status === "published").length;
       const draft = allProjects.filter((p) => p.status === "draft").length;
+      const unreadCount = await messageStore.countUnread();
+      const totalCount = await messageStore.countTotal();
 
       return NextResponse.json({
         success: true,
@@ -97,8 +107,8 @@ export async function GET() {
           totalProjects: allProjects.length,
           publishedProjects: published,
           draftProjects: draft,
-          unreadMessages: 0,
-          totalMessages: 0,
+          unreadMessages: unreadCount,
+          totalMessages: totalCount,
           totalViews: 42,
           totalClicks: 18,
           viewsTrend: 12,

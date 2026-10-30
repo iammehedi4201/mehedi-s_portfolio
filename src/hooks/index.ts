@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback, RefObject } from "react";
+import type { Project } from "@/types";
 
 /** Hook to detect when an element enters the viewport */
 export function useScrollAnimation(
@@ -42,7 +43,7 @@ export function useContactForm() {
       email: string;
       subject: string;
       body: string;
-    }) => {
+    }): Promise<boolean> => {
       setIsSubmitting(true);
       setError(null);
       setIsSuccess(false);
@@ -56,13 +57,15 @@ export function useContactForm() {
 
         const json = await res.json();
 
-        if (!res.ok) {
+        if (!res.ok || !json.success) {
           throw new Error(json.error || "Failed to send message");
         }
 
         setIsSuccess(true);
+        return true;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong");
+        return false;
       } finally {
         setIsSubmitting(false);
       }
@@ -72,8 +75,6 @@ export function useContactForm() {
 
   return { submitForm, isSubmitting, isSuccess, error };
 }
-
-import type { Project } from "@/types";
 
 /** Hook to fetch projects from API */
 export function useProjects(category?: string) {

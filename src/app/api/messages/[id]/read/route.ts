@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/db";
-import Message from "@/lib/models/Message";
+import { messageStore } from "@/lib/storage/messageStore";
 
 // PATCH /api/messages/[id]/read — Protected: mark message as read
 export async function PATCH(
@@ -18,12 +17,7 @@ export async function PATCH(
       );
     }
 
-    await dbConnect();
-    const message = await Message.findByIdAndUpdate(
-      params.id,
-      { isRead: true },
-      { new: true }
-    ).lean();
+    const message = await messageStore.markAsRead(params.id);
 
     if (!message) {
       return NextResponse.json(

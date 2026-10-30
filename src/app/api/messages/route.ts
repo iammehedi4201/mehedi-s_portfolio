@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import dbConnect from "@/lib/db";
-import Message from "@/lib/models/Message";
 import { createMessageSchema } from "@/lib/schemas";
+import { messageStore } from "@/lib/storage/messageStore";
 
 // POST /api/messages — Public: save contact form submission
 export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
     const body = await req.json();
     const parsed = createMessageSchema.safeParse(body);
 
@@ -19,10 +17,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await Message.create(parsed.data);
+    const message = await messageStore.create(parsed.data);
 
     return NextResponse.json(
-      { success: true, message: "Message sent successfully!" },
+      { success: true, message: "Message sent successfully!", data: message },
       { status: 201 }
     );
   } catch (error) {
@@ -45,24 +43,19 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    await dbConnect();
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
-    const skip = (page - 1) * limit;
 
-    const [messages, total] = await Promise.all([
-      Message.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
-      Message.countDocuments(),
-    ]);
+    const result = await messageStore.getAll(page, limit);
 
     return NextResponse.json({
       success: true,
-      data: messages,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      data: result.messages,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
     });
   } catch (error) {
     console.error("GET /api/messages error:", error);

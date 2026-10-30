@@ -26,9 +26,13 @@ export default function ContactSection() {
   });
 
   const onSubmit = async (data: CreateMessageInput) => {
-    await submitForm(data);
-    toast.success("Message sent! I'll get back to you soon.");
-    reset();
+    const ok = await submitForm(data);
+    if (ok) {
+      toast.success("Message sent! I'll get back to you soon.");
+      reset();
+    } else {
+      toast.error("Failed to send message. Please try again.");
+    }
   };
 
   return (
