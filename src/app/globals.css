@@ -140,21 +140,21 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0F;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--brand-primary);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-hover);
+  background: var(--brand-primary);
 }
 
 /* Noise texture overlay */

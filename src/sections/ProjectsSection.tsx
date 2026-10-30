@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { useProjects, useAnalytics } from "@/hooks";
-import { ExternalLink, Github, FolderCode } from "lucide-react";
+import { ExternalLink, Github, FolderCode, X, Sparkles, Layers } from "lucide-react";
 import type { Project } from "@/types";
 
 // Genuine production projects extracted from Mehedi Hasan's verified CV (fallback)
@@ -231,90 +231,230 @@ export default function ProjectsSection() {
         </AnimatePresence>
       </div>
 
-      {/* Project Detail Modal with Full Screenshot & Bullet Features */}
+      {/* Project Case Study Split-Screen Modal */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-2xl bg-surface border-border-subtle">
+        <DialogContent
+          hideDefaultClose
+          className="max-w-5xl lg:max-w-6xl w-[95vw] md:w-[90vw] p-0 bg-surface border border-border-subtle rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl max-h-[92vh] md:max-h-[85vh] flex flex-col focus:outline-none"
+        >
           {selectedProject && (
-            <div className="space-y-5">
-              {/* Project Screenshot in Modal */}
-              {selectedProject.thumbnail && (
-                <div className="rounded-xl overflow-hidden border border-border-subtle max-h-64 relative bg-surface-subtle">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={selectedProject.thumbnail}
-                    alt={selectedProject.title}
-                    className="w-full h-full object-cover object-top"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/90 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-[10px] font-bold shadow-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Live Site</span>
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <DialogHeader>
-                <div className="inline-flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-subtle text-brand-subtle-text border border-brand-primary/30">
-                    {selectedProject.timeline || "Production"}
+            <div className="flex flex-col h-full max-h-[92vh] md:max-h-[85vh]">
+              {/* Top Case Study Toolbar */}
+              <div className="flex items-center justify-between px-5 sm:px-7 py-3.5 border-b border-border-subtle bg-surface z-20 flex-shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-sm bg-brand-primary" />
+                  <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-text-muted uppercase">
+                    Case Study // {selectedProject.category === "fullstack" ? "Full-Stack System" : selectedProject.category}
                   </span>
+                  {selectedProject.liveUrl && (
+                    <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Live Platform
+                    </span>
+                  )}
                 </div>
-                <DialogTitle className="font-heading text-2xl font-semibold tracking-tight text-heading">
-                  {selectedProject.title}
-                </DialogTitle>
-                <DialogDescription className="text-body text-sm font-normal leading-relaxed mt-1">
-                  {selectedProject.description}
-                </DialogDescription>
-              </DialogHeader>
 
-              {/* Key Features Bullet List from CV */}
-              {selectedProject.features && selectedProject.features.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="text-xs font-semibold text-heading uppercase tracking-wider">
-                    Key Achievements &amp; Contributions
-                  </h4>
-                  <ul className="space-y-1.5 text-xs text-body font-normal leading-relaxed">
-                    {selectedProject.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="text-brand-primary font-bold mt-0.5">•</span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Technologies */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-heading uppercase tracking-wider">
-                  Technologies Used
-                </h4>
-                <div className="flex flex-wrap gap-1.5">
-                  {(selectedProject.techStack || []).map((tech) => (
-                    <Badge key={tech} variant="brand" className="text-xs py-1 font-medium">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
+                {/* Properly Positioned Clean Close Button */}
+                <DialogClose asChild>
+                  <button
+                    type="button"
+                    className="rounded-xl p-1.5 text-text-muted hover:text-heading bg-surface-subtle hover:bg-surface-elevated border border-border-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    aria-label="Close dialog"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </DialogClose>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 pt-3 border-t border-border-subtle">
-                {selectedProject.liveUrl && (
-                  <Button variant="primary" asChild>
-                    <a href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="mr-2 h-4 w-4" /> Visit Live Platform
-                    </a>
-                  </Button>
-                )}
-                {selectedProject.githubUrl && (
-                  <Button variant="secondary" asChild>
-                    <a href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">
-                      <Github className="mr-2 h-4 w-4" /> Source Code
-                    </a>
-                  </Button>
-                )}
+              {/* Split Screen Content Body */}
+              <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-visible min-h-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                {/* LEFT PANE: Prominent Screenshot & Primary Action */}
+                <div className="w-full md:w-[44%] lg:w-[45%] bg-surface-subtle/30 md:border-r border-b md:border-b-0 border-border-subtle p-5 sm:p-6 flex flex-col justify-between space-y-4 flex-shrink-0">
+                  <div className="space-y-3.5">
+                    {/* Framed Screenshot Showcase */}
+                    {selectedProject.thumbnail && (
+                      <div className="rounded-xl overflow-hidden border border-border-subtle bg-surface shadow-sm group">
+                        {/* Browser-style minimal window bar */}
+                        <div className="flex items-center justify-between px-3 py-1.5 bg-surface-subtle border-b border-border-subtle text-[11px] font-mono text-text-muted">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-border-strong/40" />
+                            <span className="w-2 h-2 rounded-full bg-border-strong/40" />
+                            <span className="w-2 h-2 rounded-full bg-border-strong/40" />
+                          </div>
+                          <span className="text-[10px] text-text-muted/70 truncate max-w-[180px]">
+                            {selectedProject.liveUrl
+                              ? selectedProject.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+                              : "mehedihasan.dev"}
+                          </span>
+                          <span className="w-2" />
+                        </div>
+
+                        {/* Screenshot image */}
+                        <div className="relative aspect-[16/10] bg-surface-subtle overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={selectedProject.thumbnail}
+                            alt={selectedProject.title}
+                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Quick Metadata Grid */}
+                    <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-surface border border-border-subtle">
+                      <div>
+                        <span className="text-[9px] font-mono text-text-muted uppercase tracking-wider block">
+                          Timeline
+                        </span>
+                        <p className="text-xs font-semibold text-heading font-sans mt-0.5">
+                          {selectedProject.timeline || "Production"}
+                        </p>
+                      </div>
+                      <div className="border-l border-border-subtle pl-2.5">
+                        <span className="text-[9px] font-mono text-text-muted uppercase tracking-wider block">
+                          Status
+                        </span>
+                        <p className="text-xs font-semibold text-color-success font-sans mt-0.5 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-color-success" />
+                          Production Live
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Primary CTA Buttons on Desktop */}
+                  <div className="space-y-2 pt-1 hidden md:block">
+                    {selectedProject.liveUrl && (
+                      <Button size="lg" variant="primary" asChild className="w-full justify-center shadow-sm">
+                        <a
+                          href={selectedProject.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="gap-2 font-semibold"
+                        >
+                          <span>Visit Live Platform</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    )}
+                    {selectedProject.githubUrl && (
+                      <Button size="lg" variant="secondary" asChild className="w-full justify-center">
+                        <a
+                          href={selectedProject.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="gap-2 font-medium"
+                        >
+                          <Github className="w-4 h-4" />
+                          <span>View Source Code</span>
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* RIGHT PANE: Structured Case Study Details */}
+                <div className="w-full md:w-[56%] lg:w-[55%] p-5 sm:p-6 lg:p-7 flex flex-col justify-between space-y-3.5 sm:space-y-4 overflow-y-auto md:overflow-visible [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  {/* Title & Overview */}
+                  <div>
+                    <div className="inline-flex items-center gap-2 mb-1.5">
+                      <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-md bg-brand-subtle text-brand-subtle-text border border-brand-primary/30 uppercase tracking-wider">
+                        {selectedProject.timeline || "Production"}
+                      </span>
+                      <span className="text-xs font-mono text-text-muted">
+                        · {selectedProject.category === "fullstack" ? "Full-Stack System" : selectedProject.category}
+                      </span>
+                    </div>
+
+                    <DialogTitle className="font-heading text-xl sm:text-2xl lg:text-[25px] font-bold tracking-tight text-heading leading-tight">
+                      {selectedProject.title}
+                    </DialogTitle>
+
+                    <DialogDescription className="text-text-body text-xs sm:text-[13.5px] font-normal leading-relaxed mt-2">
+                      {selectedProject.description}
+                    </DialogDescription>
+                  </div>
+
+                  {/* Key Achievements & Contributions (Clean 2-Column Grid) */}
+                  {selectedProject.features && selectedProject.features.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-brand-primary" />
+                        <h4 className="text-[10px] sm:text-[11px] font-mono font-bold text-text-muted uppercase tracking-wider">
+                          Key Achievements &amp; Contributions
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {selectedProject.features.map((feature, idx) => (
+                          <div
+                            key={idx}
+                            className="p-2.5 rounded-xl bg-surface-subtle border border-border-subtle hover:border-brand-primary/40 transition-colors flex items-start gap-2.5"
+                          >
+                            <span className="text-[9px] font-mono text-brand-primary font-bold px-1.5 py-0.5 rounded bg-surface border border-border-subtle flex-shrink-0 mt-0.5">
+                              0{idx + 1}
+                            </span>
+                            <p className="text-[11px] sm:text-xs text-heading font-sans leading-snug">
+                              {feature}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Technologies Used Badges */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Layers className="w-3.5 h-3.5 text-brand-primary" />
+                      <h4 className="text-[10px] sm:text-[11px] font-mono font-bold text-text-muted uppercase tracking-wider">
+                        Technologies &amp; Architecture
+                      </h4>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {(selectedProject.techStack || []).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-surface-subtle border border-border-subtle text-heading hover:border-brand-primary/40 transition-colors"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Mobile-Only Action Button (Bottom Anchor) */}
+                  <div className="md:hidden pt-3 border-t border-border-subtle space-y-2">
+                    {selectedProject.liveUrl && (
+                      <Button size="lg" variant="primary" asChild className="w-full justify-center">
+                        <a
+                          href={selectedProject.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="gap-2 font-semibold"
+                        >
+                          <span>Visit Live Platform</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    )}
+                    {selectedProject.githubUrl && (
+                      <Button size="lg" variant="secondary" asChild className="w-full justify-center">
+                        <a
+                          href={selectedProject.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="gap-2 font-medium"
+                        >
+                          <Github className="w-4 h-4" />
+                          <span>View Source Code</span>
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
