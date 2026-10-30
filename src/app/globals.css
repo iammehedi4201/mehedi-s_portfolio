@@ -207,7 +207,16 @@
 /* Section divider */
 .section-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(229, 160, 13, 0.3), rgba(255, 255, 255, 0.1), transparent);
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 20%,
+    var(--brand-primary) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent 100%
+  );
+  opacity: 0.65;
 }
 
 /* Text accent */
