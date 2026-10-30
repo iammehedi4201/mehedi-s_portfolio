@@ -66,6 +66,7 @@ const config: Config = {
         "brand-hover": "var(--brand-hover)",
         "brand-on-primary": "var(--brand-on-primary)",
         "brand-subtle": "var(--brand-subtle)",
+        "brand-subtle-text": "var(--brand-subtle-text)",
 
         "color-success": "var(--color-success)",
         "color-success-subtle": "var(--color-success-subtle)",
@@ -86,10 +87,10 @@ const config: Config = {
         "dash-card": "var(--bg-surface)",
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "var(--font-inter)", "sans-serif"],
-        heading: ["var(--font-manrope)", "var(--font-syne)", "sans-serif"],
-        body: ["var(--font-manrope)", "var(--font-inter)", "sans-serif"],
-        mono: ["var(--font-mono)", "JetBrains Mono", "Fira Code", "monospace"],
+        sans: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
+        heading: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
+        body: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "JetBrains Mono", "Fira Code", "monospace"],
       },
       boxShadow: {
         sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",

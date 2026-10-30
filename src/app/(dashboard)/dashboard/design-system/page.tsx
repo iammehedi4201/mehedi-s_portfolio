@@ -26,6 +26,7 @@ import {
   THEME_STORAGE_KEY,
   applyThemeToDocument,
   createCustomTheme,
+  getSubtleTextColor,
 } from "@/lib/theme";
 
 export default function DashboardDesignSystemPage() {
@@ -33,6 +34,8 @@ export default function DashboardDesignSystemPage() {
   const [customHex, setCustomHex] = useState("#E5A00D");
   const [isSaving, setIsSaving] = useState(false);
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
+
+  const subtleTextColor = activeTheme.subtleText || getSubtleTextColor(activeTheme.primary);
 
   useEffect(() => {
     // 1. Try reading from localStorage first
@@ -300,12 +303,14 @@ export default function DashboardDesignSystemPage() {
             </div>
 
             {/* Buttons Showcase */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground">Action Buttons</label>
+            <div className="space-y-2.5">
+              <label className="text-xs font-bold text-foreground uppercase tracking-wide">
+                Action Buttons
+              </label>
               <div className="flex items-center gap-3 flex-wrap">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95"
+                  className="px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 hover:brightness-105"
                   style={{
                     backgroundColor: activeTheme.primary,
                     color: activeTheme.onPrimary,
@@ -315,10 +320,10 @@ export default function DashboardDesignSystemPage() {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold border transition-all active:scale-95"
+                  className="px-4 py-2 rounded-xl text-xs font-bold border transition-all active:scale-95 hover:bg-surface-elevated"
                   style={{
                     borderColor: activeTheme.primary,
-                    color: activeTheme.primary,
+                    color: subtleTextColor,
                     backgroundColor: "transparent",
                   }}
                 >
@@ -326,10 +331,11 @@ export default function DashboardDesignSystemPage() {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold transition-all active:scale-95"
+                  className="px-4 py-2 rounded-xl text-xs font-bold border transition-all active:scale-95 shadow-sm hover:brightness-110"
                   style={{
                     backgroundColor: activeTheme.subtle,
-                    color: activeTheme.primary,
+                    color: subtleTextColor,
+                    borderColor: `${activeTheme.primary}50`,
                   }}
                 >
                   Subtle Action
@@ -338,26 +344,28 @@ export default function DashboardDesignSystemPage() {
             </div>
 
             {/* Badges & Pills Showcase */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground">Badges &amp; Status Indicators</label>
+            <div className="space-y-2.5">
+              <label className="text-xs font-bold text-foreground uppercase tracking-wide">
+                Badges &amp; Status Indicators
+              </label>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <span
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-sm"
                   style={{
                     backgroundColor: activeTheme.subtle,
-                    color: activeTheme.primary,
-                    borderColor: `${activeTheme.primary}40`,
+                    color: subtleTextColor,
+                    borderColor: `${activeTheme.primary}50`,
                   }}
                 >
-                  <Sparkles className="h-3.5 w-3.5" />
+                  <Sparkles className="h-3.5 w-3.5" style={{ color: subtleTextColor }} />
                   Featured Badge
                 </span>
                 <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border shadow-sm"
                   style={{
                     backgroundColor: activeTheme.subtle,
-                    color: activeTheme.primary,
-                    borderColor: `${activeTheme.primary}30`,
+                    color: subtleTextColor,
+                    borderColor: `${activeTheme.primary}40`,
                   }}
                 >
                   <span
@@ -367,14 +375,16 @@ export default function DashboardDesignSystemPage() {
                   Live Indicator
                 </span>
                 <span className="px-2.5 py-0.5 rounded-md text-xs font-mono bg-surface-subtle border border-border-subtle text-foreground">
-                  tag: <span style={{ color: activeTheme.primary }}>Next.js 14</span>
+                  tag: <span className="font-bold" style={{ color: subtleTextColor }}>Next.js 14</span>
                 </span>
               </div>
             </div>
 
             {/* Interactive Card with Brand Hover Border */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-muted-foreground">Interactive Card Accent</label>
+            <div className="space-y-2.5">
+              <label className="text-xs font-bold text-foreground uppercase tracking-wide">
+                Interactive Card Accent
+              </label>
               <div
                 className="p-4 rounded-xl border bg-surface-elevated/70 transition-all duration-200"
                 style={{
@@ -385,8 +395,8 @@ export default function DashboardDesignSystemPage() {
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-foreground">Next-Gen Full Stack Portfolio</h4>
                   <span
-                    className="text-[11px] font-semibold"
-                    style={{ color: activeTheme.primary }}
+                    className="text-[11px] font-bold"
+                    style={{ color: subtleTextColor }}
                   >
                     Active Project
                   </span>
@@ -421,6 +431,7 @@ export default function DashboardDesignSystemPage() {
                 { label: "--brand-primary", val: activeTheme.primary, color: activeTheme.primary },
                 { label: "--brand-hover", val: activeTheme.hover, color: activeTheme.hover },
                 { label: "--brand-subtle", val: activeTheme.subtle, color: activeTheme.subtle },
+                { label: "--brand-subtle-text", val: subtleTextColor, color: subtleTextColor },
                 { label: "--brand-on-primary", val: activeTheme.onPrimary, color: activeTheme.onPrimary },
                 { label: "--primary (HSL)", val: activeTheme.hsl },
               ].map((token) => (

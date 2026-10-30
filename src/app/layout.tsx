@@ -1,25 +1,9 @@
 import type { Metadata } from "next";
-import { Manrope, Inter, Syne } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import "./globals.css";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-syne",
-  weight: ["600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: "Mehedi Hasan | Software Engineer",
@@ -80,6 +64,7 @@ export default function RootLayout({
                     r.style.setProperty("--brand-primary", t.primary);
                     if (t.hover) r.style.setProperty("--brand-hover", t.hover);
                     if (t.subtle) r.style.setProperty("--brand-subtle", t.subtle);
+                    if (t.subtleText) r.style.setProperty("--brand-subtle-text", t.subtleText);
                     if (t.onPrimary) r.style.setProperty("--brand-on-primary", t.onPrimary);
                     if (t.hsl) {
                       r.style.setProperty("--primary", t.hsl);
@@ -93,7 +78,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${manrope.variable} ${inter.variable} ${syne.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden`}
+        className={`${GeistSans.variable} ${GeistMono.variable} font-sans antialiased bg-background text-foreground overflow-x-hidden`}
       >
         <ThemeProvider
           attribute="class"

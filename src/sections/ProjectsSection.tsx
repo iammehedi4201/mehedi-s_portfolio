@@ -206,11 +206,11 @@ export default function ProjectsSection() {
               <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <h3 className="font-heading font-black text-xl text-heading group-hover:text-brand-primary transition-colors">
+                    <h3 className="font-heading font-semibold text-xl text-heading group-hover:text-brand-primary transition-colors">
                       {project.title}
                     </h3>
                   </div>
-                  <p className="text-xs sm:text-sm text-body leading-relaxed line-clamp-3 mt-2">
+                  <p className="text-xs sm:text-sm text-body font-normal leading-relaxed line-clamp-3 mt-2">
                     {project.description}
                   </p>
                 </div>
@@ -256,14 +256,14 @@ export default function ProjectsSection() {
 
               <DialogHeader>
                 <div className="inline-flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-subtle text-brand-primary border border-brand-primary/30">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-subtle text-brand-subtle-text border border-brand-primary/30">
                     {selectedProject.timeline || "Production"}
                   </span>
                 </div>
-                <DialogTitle className="font-heading text-2xl font-black text-heading">
+                <DialogTitle className="font-heading text-2xl font-semibold tracking-tight text-heading">
                   {selectedProject.title}
                 </DialogTitle>
-                <DialogDescription className="text-body text-sm leading-relaxed mt-1">
+                <DialogDescription className="text-body text-sm font-normal leading-relaxed mt-1">
                   {selectedProject.description}
                 </DialogDescription>
               </DialogHeader>
@@ -271,10 +271,10 @@ export default function ProjectsSection() {
               {/* Key Features Bullet List from CV */}
               {selectedProject.features && selectedProject.features.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
+                  <h4 className="text-xs font-semibold text-heading uppercase tracking-wider">
                     Key Achievements &amp; Contributions
                   </h4>
-                  <ul className="space-y-1.5 text-xs text-body">
+                  <ul className="space-y-1.5 text-xs text-body font-normal leading-relaxed">
                     {selectedProject.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2">
                         <span className="text-brand-primary font-bold mt-0.5">•</span>
@@ -287,12 +287,12 @@ export default function ProjectsSection() {
 
               {/* Technologies */}
               <div className="space-y-2">
-                <h4 className="text-xs font-bold text-heading uppercase tracking-wider">
+                <h4 className="text-xs font-semibold text-heading uppercase tracking-wider">
                   Technologies Used
                 </h4>
                 <div className="flex flex-wrap gap-1.5">
                   {(selectedProject.techStack || []).map((tech) => (
-                    <Badge key={tech} variant="brand" className="text-xs py-1">
+                    <Badge key={tech} variant="brand" className="text-xs py-1 font-medium">
                       {tech}
                     </Badge>
                   ))}

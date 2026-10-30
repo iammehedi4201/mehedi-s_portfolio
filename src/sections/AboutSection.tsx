@@ -64,7 +64,7 @@ export default function AboutSection() {
               />
             </div>
             {/* Status Beacon */}
-            <div className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-surface-elevated border border-emerald-500/30 text-slate-200 text-[11px] font-bold flex items-center gap-2 shadow-card z-10">
+            <div className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-surface-elevated border border-emerald-500/30 text-slate-200 text-[11px] font-semibold flex items-center gap-2 shadow-card z-10">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
@@ -80,13 +80,13 @@ export default function AboutSection() {
                 key={metric.label}
                 className="p-4 rounded-xl bg-surface border border-border-subtle shadow-card hover:border-brand-primary transition-colors"
               >
-                <p className="text-xl sm:text-2xl font-black font-heading text-brand-primary truncate">
+                <p className="text-xl sm:text-2xl font-semibold font-heading text-brand-primary truncate tracking-tight">
                   {metric.value}
                 </p>
-                <p className="text-xs font-bold text-heading mt-1">
+                <p className="text-xs font-semibold text-heading mt-1">
                   {metric.label}
                 </p>
-                <p className="text-[11px] text-text-muted mt-0.5 leading-snug">
+                <p className="text-[11px] text-text-muted mt-0.5 leading-snug font-normal">
                   {metric.description}
                 </p>
               </div>
@@ -103,8 +103,8 @@ export default function AboutSection() {
           className="lg:col-span-7 space-y-8"
         >
           {/* Bio text */}
-          <div className="space-y-3.5 text-body text-base leading-relaxed">
-            <h3 className="text-2xl font-black font-heading text-heading">
+          <div className="space-y-3.5 text-body text-base leading-relaxed font-normal">
+            <h3 className="text-2xl font-semibold font-heading text-heading tracking-tight">
               Building scalable web apps with <span className="text-brand-primary">clean architecture</span>.
             </h3>
             <p>
@@ -133,7 +133,7 @@ export default function AboutSection() {
 
           {/* Tech Stack Grid (Solid) */}
           <div className="pt-4 border-t border-border-subtle">
-            <h4 className="text-xs font-black uppercase tracking-wider text-text-muted mb-4 flex items-center gap-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-4 flex items-center gap-2">
               <Code2 className="w-4 h-4 text-brand-primary" />
               <span>Core Technologies & Tooling</span>
             </h4>
@@ -144,16 +144,16 @@ export default function AboutSection() {
                   className="p-3 rounded-xl bg-surface border border-border-subtle hover:border-brand-primary transition-colors flex items-center gap-3 shadow-sm cursor-default group"
                 >
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold flex-shrink-0"
                     style={{ backgroundColor: `${tech.color}18`, color: tech.color }}
                   >
                     {tech.name.charAt(0)}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-heading group-hover:text-brand-primary transition-colors truncate">
+                    <p className="text-xs font-medium text-heading group-hover:text-brand-primary transition-colors truncate">
                       {tech.name}
                     </p>
-                    <p className="text-[10px] text-text-muted truncate">
+                    <p className="text-[10px] text-text-muted truncate font-normal">
                       {tech.category}
                     </p>
                   </div>

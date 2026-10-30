@@ -50,11 +50,11 @@ export default function Navbar() {
             href="/"
             className="flex items-center gap-2 group cursor-pointer select-none"
           >
-            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-primary">
+            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-subtle-text">
               <Terminal className="w-4 h-4" />
             </div>
-            <span className="font-heading font-black text-base sm:text-lg tracking-tight text-heading">
-              MEHEDI<span className="text-brand-primary font-black">.</span>
+            <span className="font-heading font-bold text-base sm:text-lg tracking-tight text-heading">
+              MEHEDI<span className="text-brand-primary font-bold">.</span>
             </span>
           </Link>
 
@@ -67,9 +67,9 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   className={cn(
-                    "text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors duration-200",
+                    "text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200",
                     isActive
-                      ? "text-brand-primary font-bold bg-brand-subtle"
+                      ? "text-brand-subtle-text font-semibold bg-brand-subtle"
                       : "text-body hover:text-heading hover:bg-surface-elevated"
                   )}
                 >
@@ -86,7 +86,7 @@ export default function Navbar() {
               href="/Mehedi_Hasan_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle hover:border-brand-primary transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-heading bg-surface-elevated hover:bg-surface-subtle border border-border-subtle hover:border-brand-primary transition-colors shadow-sm"
               title="View Resume in new tab"
             >
               <FileText className="w-3.5 h-3.5 text-brand-primary" />
@@ -121,7 +121,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-heading hover:bg-surface-elevated hover:text-brand-primary transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl text-sm font-semibold text-heading hover:bg-surface-elevated hover:text-brand-primary transition-colors"
                 >
                   <span>{link.label}</span>
                 </Link>
@@ -133,7 +133,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl text-sm font-bold text-brand-primary bg-brand-subtle border border-brand-primary/30"
+                  className="flex items-center justify-between p-3 rounded-xl text-sm font-semibold text-brand-subtle-text bg-brand-subtle border border-brand-primary/30"
                 >
                   <span className="flex items-center gap-2">
                     <FileText className="w-4 h-4" />

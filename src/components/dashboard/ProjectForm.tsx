@@ -161,7 +161,7 @@ export function ProjectForm({
   return (
     <DialogContent className="max-w-3xl bg-dash-card border-white/[0.08] max-h-[92vh] overflow-y-auto text-foreground p-6 sm:p-8">
       <DialogHeader>
-        <DialogTitle className="font-heading text-xl sm:text-2xl font-bold flex items-center gap-2">
+        <DialogTitle className="font-heading text-xl sm:text-2xl font-semibold tracking-tight flex items-center gap-2">
           {editingProject ? "Edit Project" : "New Portfolio Project"}
         </DialogTitle>
         <DialogDescription className="text-muted-foreground text-sm">
@@ -569,7 +569,7 @@ export function ProjectForm({
             type="submit"
             variant="glow"
             disabled={isSubmitting}
-            className="font-bold min-w-[140px]"
+            className="font-semibold min-w-[140px]"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">

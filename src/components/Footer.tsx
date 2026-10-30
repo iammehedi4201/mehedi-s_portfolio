@@ -15,11 +15,11 @@ export default function Footer() {
             href="/"
             className="flex items-center gap-2 group cursor-pointer select-none"
           >
-            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-primary">
+            <div className="w-8 h-8 rounded-lg bg-brand-subtle border border-brand-primary/30 flex items-center justify-center text-brand-subtle-text">
               <Terminal className="w-4 h-4" />
             </div>
-            <span className="font-heading font-black text-base sm:text-lg tracking-tight text-heading">
-              MEHEDI<span className="text-brand-primary font-black">.</span>
+            <span className="font-heading font-bold text-base sm:text-lg tracking-tight text-heading">
+              MEHEDI<span className="text-brand-primary font-bold">.</span>
             </span>
           </Link>
 
@@ -53,7 +53,7 @@ export default function Footer() {
 
         {/* Big Highlighted Name — Edge-to-Edge Typography touching bottom edge with zero gap */}
         <div className="pt-2 sm:pt-4 pb-0 px-2 sm:px-3 w-full flex justify-center items-end overflow-hidden relative z-10">
-          <h2 className="font-[family-name:var(--font-syne)] font-semibold text-[15.2vw] sm:text-[14.6vw] md:text-[13.8vw] lg:text-[13vw] xl:text-[168px] tracking-tight leading-none text-heading select-none text-center pointer-events-none whitespace-nowrap -mb-[3vw] xl:-mb-[38px] w-full">
+          <h2 className="font-heading font-bold text-[15.2vw] sm:text-[14.6vw] md:text-[13.8vw] lg:text-[13vw] xl:text-[168px] tracking-tight leading-none text-heading select-none text-center pointer-events-none whitespace-nowrap -mb-[3vw] xl:-mb-[38px] w-full">
             Mehedi Hasan
           </h2>
         </div>

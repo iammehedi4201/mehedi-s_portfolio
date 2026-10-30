@@ -165,13 +165,13 @@ export const NEW_COLOR_TOKENS: ColorToken[] = [
 ];
 
 export const TYPOGRAPHY_SCALE = [
-  { element: "Hero Display", weight: "800", utility: "font-extrabold text-5xl sm:text-6xl lg:text-7xl", description: "Main portfolio hero title (solid color, no gradients)" },
-  { element: "Section Heading", weight: "700", utility: "font-bold text-3xl sm:text-4xl", description: "Section titles and major landmarks" },
-  { element: "Card Title", weight: "600", utility: "font-semibold text-lg sm:text-xl", description: "Project, skill and timeline card headers" },
-  { element: "Navigation & Tabs", weight: "600", utility: "font-semibold text-xs sm:text-sm tracking-wide", description: "Nav bar links, filter tabs, breadcrumbs" },
-  { element: "Buttons & CTAs", weight: "700", utility: "font-bold text-sm tracking-wide", description: "Solid interactive button labels" },
-  { element: "Body Large", weight: "400", utility: "font-normal text-base leading-relaxed", description: "Hero paragraph and about bio lead text" },
+  { element: "Hero Display", weight: "700", utility: "font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl tracking-tight", description: "Main portfolio hero title in Geist Sans" },
+  { element: "Section Heading", weight: "600", utility: "font-semibold text-3xl sm:text-4xl lg:text-5xl tracking-tight", description: "Section titles and major landmarks" },
+  { element: "Card Title", weight: "600", utility: "font-semibold text-lg sm:text-xl tracking-tight", description: "Project, skill, and timeline card headers" },
+  { element: "Navigation & Tabs", weight: "500-600", utility: "font-medium sm:font-semibold text-xs sm:text-sm", description: "Navbar links, filter tabs, breadcrumbs" },
+  { element: "Buttons & CTAs", weight: "600", utility: "font-semibold text-sm", description: "Primary and secondary button labels" },
+  { element: "Body Large", weight: "400", utility: "font-normal text-base sm:text-lg leading-relaxed", description: "Hero paragraph and about bio lead text" },
   { element: "Body Standard", weight: "400", utility: "font-normal text-sm leading-relaxed", description: "Project descriptions, timeline notes" },
   { element: "Caption / Meta", weight: "500", utility: "font-medium text-xs", description: "Timestamps, tags, statistics labels" },
-  { element: "Micro / Overline", weight: "700", utility: "font-bold text-[10px] uppercase tracking-widest", description: "Category pills, status overlines" },
+  { element: "Code & Technical", weight: "400-500", utility: "font-mono text-xs font-medium", description: "Code snippets, terminal blocks, technical metrics in Geist Mono" },
 ];

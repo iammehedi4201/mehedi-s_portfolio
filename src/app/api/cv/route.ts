@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
         settings = new GlobalSettings(updated);
       } else {
         if (cvUrl !== undefined) settings.cvUrl = cvUrl;
-        if (cvLinks !== undefined) settings.cvLinks = updated.cvLinks;
+        if (cvLinks !== undefined) settings.cvLinks = updated.cvLinks as any;
         if (activeCategory !== undefined) settings.activeCategory = activeCategory;
       }
       await settings.save();

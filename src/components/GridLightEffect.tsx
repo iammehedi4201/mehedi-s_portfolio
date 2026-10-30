@@ -5,28 +5,23 @@ import React, { useEffect, useRef } from "react";
 interface GridLightEffectProps {
   gridSize?: number;
   className?: string;
-  maxSparks?: number;
+  maxStreams?: number;
 }
 
-interface Spark {
+interface DataStream {
   x: number;
   y: number;
-  direction: "up" | "down" | "left" | "right";
   speed: number;
   length: number;
-  opacity: number;
   maxOpacity: number;
-  state: "in" | "active" | "out";
-  distanceTraveled: number;
-  totalDistance: number;
-  distanceSinceLastTurn: number;
-  minTurnDistance: number;
+  isDashed: boolean;
+  dashPattern: number[];
 }
 
 export function GridLightEffect({
   gridSize = 24,
   className = "",
-  maxSparks = 6,
+  maxStreams,
 }: GridLightEffectProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -38,10 +33,8 @@ export function GridLightEffect({
     if (!ctx) return;
 
     // Respect user's reduced-motion preference
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReducedMotion) return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mediaQuery.matches) return;
 
     let animationFrameId: number;
     let width = 0;
@@ -67,13 +60,13 @@ export function GridLightEffect({
           }
         }
       } catch {
-        // Fallback remains gold
+        // Fallback remains gold (#E5A00D)
       }
     };
 
     updateColorFromCSS();
 
-    // Resize handling with devicePixelRatio for razor-sharp hairlines
+    // Resize handling with devicePixelRatio for crisp rendering
     const handleResize = () => {
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
@@ -89,68 +82,54 @@ export function GridLightEffect({
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(canvas);
 
-    // Responsive spark count (fewer on mobile for peak efficiency)
-    const activeSparkCount = width < 768 ? Math.max(3, Math.floor(maxSparks / 2)) : maxSparks;
+    // Dynamic stream count: sparse & dim (e.g. 12 on desktop, 8 on tablet, 5 on mobile)
+    const getStreamCount = () => {
+      if (maxStreams !== undefined) return maxStreams;
+      if (width >= 1024) return 12;
+      if (width >= 640) return 8;
+      return 5;
+    };
 
-    const directions: ("up" | "down" | "left" | "right")[] = [
-      "up",
-      "down",
-      "left",
-      "right",
-    ];
-
-    const createSpark = (initialSpawn = false): Spark => {
-      const isHorizontal = Math.random() > 0.5;
+    const createStream = (initialSpawn = false): DataStream => {
       const cols = Math.max(1, Math.floor(width / gridSize));
-      const rows = Math.max(1, Math.floor(height / gridSize));
+      const col = Math.floor(Math.random() * (cols + 1));
+      const x = col * gridSize;
 
-      let x: number;
-      let y: number;
-      let direction: "up" | "down" | "left" | "right";
+      // Length between 1.5 to 4.2 grid cells (e.g., 36px to 100px for 24px grid)
+      const length = gridSize * (1.5 + Math.random() * 2.7);
 
-      if (isHorizontal) {
-        direction = Math.random() > 0.5 ? "right" : "left";
-        const gridRow = Math.floor(Math.random() * (rows + 1));
-        y = gridRow * gridSize;
-        x = initialSpawn
-          ? Math.floor(Math.random() * (cols + 1)) * gridSize
-          : direction === "right"
-          ? 0
-          : cols * gridSize;
-      } else {
-        direction = Math.random() > 0.5 ? "down" : "up";
-        const gridCol = Math.floor(Math.random() * (cols + 1));
-        x = gridCol * gridSize;
-        y = initialSpawn
-          ? Math.floor(Math.random() * (rows + 1)) * gridSize
-          : direction === "down"
-          ? 0
-          : rows * gridSize;
-      }
+      // Top-to-bottom motion: varying speed from 50 to 110 px/s for asynchronous flow
+      const speed = 50 + Math.random() * 60;
 
-      const totalDistance = gridSize * (8 + Math.floor(Math.random() * 16)); // Travels 8 to 24 cells
-      const minTurnDistance = gridSize * (3 + Math.floor(Math.random() * 4)); // Can turn after 3-6 cells
+      // Subtle, dim opacity (0.35 to 0.70 max) - never blinding or distracting
+      const maxOpacity = 0.35 + Math.random() * 0.35;
+
+      // 40% chance of a digital dashed packet; 60% smooth streak
+      const isDashed = Math.random() < 0.4;
+      const dashPattern = isDashed ? [7, 4] : [];
+
+      // Initial spawn scatters streams across the entire viewport height
+      // Continuous respawn places new streams staggered above the top edge
+      const y = initialSpawn
+        ? Math.random() * (height + length) - length
+        : -length - Math.random() * 140;
 
       return {
         x,
         y,
-        direction,
-        speed: 55 + Math.random() * 45, // 55 to 100 px/s (smooth, elegant velocity)
-        length: gridSize * 1.5 + Math.random() * gridSize * 1.5, // 36px to 72px tail
-        opacity: 0,
-        maxOpacity: 0.6 + Math.random() * 0.35, // 0.6 to 0.95 (vivid but soft)
-        state: "in",
-        distanceTraveled: 0,
-        totalDistance,
-        distanceSinceLastTurn: 0,
-        minTurnDistance,
+        speed,
+        length,
+        maxOpacity,
+        isDashed,
+        dashPattern,
       };
     };
 
-    const sparks: Spark[] = Array.from({ length: activeSparkCount }).map(() =>
-      createSpark(true)
+    let streams: DataStream[] = Array.from({ length: getStreamCount() }).map(() =>
+      createStream(true)
     );
 
+    // Pause animation when tab is inactive to preserve battery & CPU
     let isDocumentVisible = true;
     const handleVisibility = () => {
       isDocumentVisible = !document.hidden;
@@ -160,10 +139,19 @@ export function GridLightEffect({
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
+    // Listen to live prefers-reduced-motion changes
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        cancelAnimationFrame(animationFrameId);
+        ctx.clearRect(0, 0, width, height);
+      }
+    };
+    mediaQuery.addEventListener("change", handleMotionChange);
+
     // Main animation loop
     const render = (time: number) => {
       animationFrameId = requestAnimationFrame(render);
-      if (!isDocumentVisible) return;
+      if (!isDocumentVisible || width === 0 || height === 0) return;
 
       const delta = Math.min((time - lastTime) / 1000, 0.1);
       lastTime = time;
@@ -172,163 +160,111 @@ export function GridLightEffect({
 
       const { r, g, b } = primaryRgb;
 
-      sparks.forEach((spark, index) => {
-        // Opacity transition state machine
-        if (spark.state === "in") {
-          spark.opacity += delta * 2.5;
-          if (spark.opacity >= spark.maxOpacity) {
-            spark.opacity = spark.maxOpacity;
-            spark.state = "active";
-          }
-        } else if (spark.state === "active") {
-          if (spark.distanceTraveled >= spark.totalDistance * 0.8) {
-            spark.state = "out";
-          }
-        } else if (spark.state === "out") {
-          spark.opacity -= delta * 1.8;
-          if (spark.opacity <= 0) {
-            sparks[index] = createSpark(false);
-            return;
-          }
-        }
+      // Dynamically adjust stream count on resize
+      const targetCount = getStreamCount();
+      if (streams.length < targetCount) {
+        streams.push(createStream(false));
+      } else if (streams.length > targetCount) {
+        streams.pop();
+      }
 
-        // Advance position along current direction
-        const step = spark.speed * delta;
-        spark.distanceTraveled += step;
-        spark.distanceSinceLastTurn += step;
+      streams.forEach((stream, index) => {
+        // Progress top-to-bottom
+        stream.y += stream.speed * delta;
 
-        const prevX = spark.x;
-        const prevY = spark.y;
-
-        switch (spark.direction) {
-          case "right":
-            spark.x += step;
-            break;
-          case "left":
-            spark.x -= step;
-            break;
-          case "down":
-            spark.y += step;
-            break;
-          case "up":
-            spark.y -= step;
-            break;
-        }
-
-        // Handle 90-degree turning at intersecting grid lines
-        if (spark.distanceSinceLastTurn >= spark.minTurnDistance) {
-          if (spark.direction === "right" || spark.direction === "left") {
-            // Check if we crossed a vertical grid line
-            const cellBefore = Math.floor(prevX / gridSize);
-            const cellAfter = Math.floor(spark.x / gridSize);
-
-            if (cellBefore !== cellAfter) {
-              const gridCrossX = (spark.direction === "right" ? cellAfter : cellBefore) * gridSize;
-              // 35% chance to make a 90-degree turn
-              if (Math.random() < 0.35) {
-                spark.x = gridCrossX;
-                spark.direction = Math.random() > 0.5 ? "down" : "up";
-                spark.distanceSinceLastTurn = 0;
-              }
-            }
-          } else {
-            // Check if we crossed a horizontal grid line
-            const cellBefore = Math.floor(prevY / gridSize);
-            const cellAfter = Math.floor(spark.y / gridSize);
-
-            if (cellBefore !== cellAfter) {
-              const gridCrossY = (spark.direction === "down" ? cellAfter : cellBefore) * gridSize;
-              // 35% chance to make a 90-degree turn
-              if (Math.random() < 0.35) {
-                spark.y = gridCrossY;
-                spark.direction = Math.random() > 0.5 ? "right" : "left";
-                spark.distanceSinceLastTurn = 0;
-              }
-            }
-          }
-        }
-
-        // Out-of-bounds reset
-        if (
-          spark.x < -gridSize ||
-          spark.x > width + gridSize ||
-          spark.y < -gridSize ||
-          spark.y > height + gridSize
-        ) {
-          sparks[index] = createSpark(false);
+        // Reset when the tail fully leaves below the viewport
+        if (stream.y - stream.length > height + 20) {
+          streams[index] = createStream(false);
           return;
         }
 
-        if (spark.opacity <= 0.01) return;
+        // Calculate smooth entrance and exit opacity fades
+        const headY = stream.y;
+        const tailY = stream.y - stream.length;
 
-        // Calculate tail start position
-        let tailX = spark.x;
-        let tailY = spark.y;
-        switch (spark.direction) {
-          case "right":
-            tailX = spark.x - spark.length;
-            break;
-          case "left":
-            tailX = spark.x + spark.length;
-            break;
-          case "down":
-            tailY = spark.y - spark.length;
-            break;
-          case "up":
-            tailY = spark.y + spark.length;
-            break;
-        }
+        // Fade in as the head enters from the top
+        const fadeIn = Math.min(1, Math.max(0, headY / 60));
+        // Fade out as the tail leaves through the bottom
+        const fadeOut = Math.min(1, Math.max(0, (height - tailY) / 60));
+        const effectiveOpacity = stream.maxOpacity * fadeIn * fadeOut;
 
-        // 1. Draw glowing tail beam traveling along the grid line
-        const gradient = ctx.createLinearGradient(tailX, tailY, spark.x, spark.y);
-        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
-        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${0.35 * spark.opacity})`);
-        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${0.95 * spark.opacity})`);
+        if (effectiveOpacity <= 0.01) return;
 
         ctx.save();
+
+        // 1. Draw glowing vertical data streak / streak packets along the grid line
+        const gradient = ctx.createLinearGradient(stream.x, tailY, stream.x, headY);
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${0.28 * effectiveOpacity})`);
+        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${0.85 * effectiveOpacity})`);
+
         ctx.strokeStyle = gradient;
         ctx.lineWidth = 1.5;
+        if (stream.isDashed) {
+          ctx.setLineDash(stream.dashPattern);
+        } else {
+          ctx.setLineDash([]);
+        }
+
         ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(spark.x, spark.y);
+        ctx.moveTo(stream.x, tailY);
+        ctx.lineTo(stream.x, headY);
         ctx.stroke();
 
-        // 2. Soft radial ambient halo around the spark head
-        const haloRadius = 14;
-        const haloGrad = ctx.createRadialGradient(
-          spark.x,
-          spark.y,
-          0,
-          spark.x,
-          spark.y,
-          haloRadius
-        );
-        haloGrad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${0.5 * spark.opacity})`);
-        haloGrad.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${0.2 * spark.opacity})`);
-        haloGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        ctx.setLineDash([]); // Reset dash for dots & halo
 
-        ctx.fillStyle = haloGrad;
-        ctx.beginPath();
-        ctx.arc(spark.x, spark.y, haloRadius, 0, Math.PI * 2);
-        ctx.fill();
+        // 2. Micro-nodes at grid intersections within the streak (digital data feeling)
+        const startGridY = Math.ceil(tailY / gridSize) * gridSize;
+        for (let nodeY = startGridY; nodeY < headY - 3; nodeY += gridSize) {
+          if (nodeY >= 0 && nodeY <= height) {
+            const distanceRatio = Math.max(0, 1 - (headY - nodeY) / stream.length);
+            const nodeOpacity = effectiveOpacity * (0.15 + 0.55 * distanceRatio);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${nodeOpacity})`;
+            ctx.beginPath();
+            ctx.arc(stream.x, nodeY, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
 
-        // 3. Bright golden-white core nucleus at the spark head
-        const coreGrad = ctx.createRadialGradient(
-          spark.x,
-          spark.y,
-          0,
-          spark.x,
-          spark.y,
-          2.5
-        );
-        coreGrad.addColorStop(0, `rgba(255, 255, 240, ${0.95 * spark.opacity})`);
-        coreGrad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${0.9 * spark.opacity})`);
-        coreGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        // 3. Ambient soft radial halo around the leading head
+        if (headY >= -10 && headY <= height + 10) {
+          const haloRadius = 11;
+          const haloGrad = ctx.createRadialGradient(
+            stream.x,
+            headY,
+            0,
+            stream.x,
+            headY,
+            haloRadius
+          );
+          haloGrad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${0.45 * effectiveOpacity})`);
+          haloGrad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${0.15 * effectiveOpacity})`);
+          haloGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
-        ctx.fillStyle = coreGrad;
-        ctx.beginPath();
-        ctx.arc(spark.x, spark.y, 2.5, 0, Math.PI * 2);
-        ctx.fill();
+          ctx.fillStyle = haloGrad;
+          ctx.beginPath();
+          ctx.arc(stream.x, headY, haloRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 4. Bright golden-white leading core nucleus
+          const coreRadius = 2.2;
+          const coreGrad = ctx.createRadialGradient(
+            stream.x,
+            headY,
+            0,
+            stream.x,
+            headY,
+            coreRadius
+          );
+          coreGrad.addColorStop(0, `rgba(255, 252, 235, ${0.95 * effectiveOpacity})`);
+          coreGrad.addColorStop(0.65, `rgba(${r}, ${g}, ${b}, ${0.85 * effectiveOpacity})`);
+          coreGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+          ctx.fillStyle = coreGrad;
+          ctx.beginPath();
+          ctx.arc(stream.x, headY, coreRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.restore();
       });
@@ -340,8 +276,9 @@ export function GridLightEffect({
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
+      mediaQuery.removeEventListener("change", handleMotionChange);
     };
-  }, [gridSize, maxSparks]);
+  }, [gridSize, maxStreams]);
 
   return (
     <canvas
@@ -351,4 +288,5 @@ export function GridLightEffect({
     />
   );
 }
+
 export default GridLightEffect;

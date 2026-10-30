@@ -63,15 +63,15 @@ export default function TimelineSection() {
                 <div className={`flex-1 ${isLeft ? "md:pr-12" : "md:pl-12"} pl-12 md:pl-0`}>
                   <div className="rounded-xl border border-border-subtle bg-surface p-5 hover:border-brand-primary transition-all duration-300 shadow-sm group">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-mono font-bold text-brand-primary bg-surface-elevated border border-border-subtle px-2.5 py-0.5 rounded">
+                      <span className="text-xs font-mono font-medium text-brand-primary bg-surface-elevated border border-border-subtle px-2.5 py-0.5 rounded">
                         {item.year}
                       </span>
                     </div>
-                    <h3 className="font-heading text-lg font-bold text-text-heading group-hover:text-brand-primary transition-colors">
+                    <h3 className="font-heading text-lg font-semibold tracking-tight text-text-heading group-hover:text-brand-primary transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-sm font-medium text-text-muted mt-0.5">{item.company}</p>
-                    <p className="text-sm text-text-body mt-2 leading-relaxed">
+                    <p className="text-sm text-text-body font-normal mt-2 leading-relaxed">
                       {item.description}
                     </p>
                   </div>

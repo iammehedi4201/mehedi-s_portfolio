@@ -57,7 +57,7 @@ export default function DesignSystemPlayground(): JSX.Element {
   Danger Action
 </button>`;
       case "badge-feature":
-        return `<span className="px-3 py-1 text-xs font-mono font-bold rounded-full bg-brand-subtle text-brand-primary border border-brand-primary/30">
+        return `<span className="px-3 py-1 text-xs font-mono font-bold rounded-full bg-brand-subtle text-brand-subtle-text border border-brand-primary/30">
   ⚡ Core Feature
 </span>`;
       case "badge-success":
@@ -154,7 +154,7 @@ export default function DesignSystemPlayground(): JSX.Element {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12 p-8 sm:p-10 rounded-3xl bg-surface border border-border-subtle shadow-sm relative overflow-hidden">
           <div className="relative z-10 max-w-2xl">
             <div className="flex items-center gap-2.5 mb-3">
-              <span className="px-3 py-1 text-[10px] font-bold tracking-wider uppercase bg-brand-subtle text-brand-primary rounded-full border border-brand-primary/30 flex items-center gap-1.5">
+              <span className="px-3 py-1 text-[10px] font-bold tracking-wider uppercase bg-brand-subtle text-brand-subtle-text rounded-full border border-brand-primary/30 flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3" /> Solid Color Design System
               </span>
               <span className="text-xs font-mono text-text-muted">v2.1.0</span>
@@ -389,7 +389,7 @@ export default function DesignSystemPlayground(): JSX.Element {
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {[
-                    { id: "badge-feature", label: "⚡ Core Feature", class: "bg-brand-subtle text-brand-primary border border-brand-primary/30" },
+                    { id: "badge-feature", label: "⚡ Core Feature", class: "bg-brand-subtle text-brand-subtle-text border border-brand-primary/30" },
                     { id: "badge-success", label: "🟢 Production Ready", class: "bg-color-success/10 text-color-success border border-color-success/30" },
                     { id: "badge-info", label: "ℹ️ Architecture Spec", class: "bg-color-info/10 text-color-info border border-color-info/30" },
                     { id: "badge-warning", label: "⚠️ Critical Metric", class: "bg-color-warning/10 text-color-warning border border-color-warning/30" },
@@ -490,7 +490,7 @@ export default function DesignSystemPlayground(): JSX.Element {
         {/* SECTION 4: LINK TO SKELETON GALLERY */}
         <section className="p-8 sm:p-10 rounded-3xl bg-surface border border-border-subtle shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
-            <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-brand-subtle text-brand-primary rounded-full border border-brand-primary/30">
+            <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-brand-subtle text-brand-subtle-text rounded-full border border-brand-primary/30">
               Responsive Loading Skeletons
             </span>
             <h3 className="text-2xl font-bold text-text-heading font-heading">

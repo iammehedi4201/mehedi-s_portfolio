@@ -20,9 +20,9 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={cn(
-          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold transition-colors select-none",
+          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors select-none",
           {
-            "bg-brand-subtle text-brand-primary border border-brand-primary/30":
+            "bg-brand-subtle text-brand-subtle-text border border-brand-primary/30":
               variant === "default" || variant === "brand" || variant === "feature",
             "bg-surface-subtle text-heading border border-border-subtle":
               variant === "secondary",

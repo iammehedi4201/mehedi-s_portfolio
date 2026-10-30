@@ -57,10 +57,10 @@ function SkillBar({ name, level, color, delay }: { name: string; level: number; 
       className="space-y-2.5"
     >
       <div className="flex justify-between items-center group">
-        <span className="text-xs font-heading font-bold uppercase tracking-wider text-text-muted group-hover:text-text-heading transition-colors">
+        <span className="text-xs font-heading font-medium uppercase tracking-wider text-text-muted group-hover:text-text-heading transition-colors">
           {name}
         </span>
-        <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-surface-elevated border border-border-subtle text-text-body">
+        <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded bg-surface-elevated border border-border-subtle text-text-body">
           {level}%
         </span>
       </div>
@@ -103,7 +103,7 @@ export default function SkillsSection() {
                 className="w-1.5 h-6 rounded-full transition-all duration-300 group-hover:h-8"
                 style={{ backgroundColor: category.color }}
               />
-              <h3 className="font-heading text-lg font-bold uppercase tracking-wide text-text-heading">
+              <h3 className="font-heading text-lg font-semibold uppercase tracking-wide text-text-heading">
                 {category.title}
               </h3>
             </div>

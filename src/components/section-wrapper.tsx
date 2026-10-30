@@ -43,16 +43,16 @@ export function SectionHeading({
     >
       {badge && (
         <div className={cn("inline-flex items-center gap-2 mb-3", align === "center" ? "justify-center" : "justify-start")}>
-          <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-brand-subtle text-brand-primary border border-brand-primary/30">
+          <span className="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest bg-brand-subtle text-brand-subtle-text border border-brand-primary/30">
             {badge}
           </span>
         </div>
       )}
-      <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-heading">
+      <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-heading">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-3 text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-3 text-base sm:text-lg text-body font-normal max-w-2xl mx-auto leading-relaxed">
           {subtitle}
         </p>
       )}

@@ -145,9 +145,9 @@ export default function HeroSection() {
             <span>Available for engineering roles &amp; opportunities</span>
           </motion.div>
 
-          {/* Heading (Solid color, NO gradients) */}
-          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-[1.08] tracking-tight text-heading">
-            <span className="block text-body text-xl sm:text-2xl font-bold mb-2">Hello, I&apos;m</span>
+          {/* Heading (Geist Sans 700 Bold) */}
+          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.08] tracking-tight text-heading">
+            <span className="block text-body text-xl sm:text-2xl font-medium mb-2">Hello, I&apos;m</span>
             <span>Mehedi Hasan</span>
           </h1>
 
@@ -156,18 +156,18 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="mt-3 font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-primary flex items-center justify-center lg:justify-start min-h-[44px]"
+            className="mt-3 font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-primary flex items-center justify-center lg:justify-start min-h-[44px]"
           >
             <span>{headline}</span>
             <span className="inline-block w-0.5 h-7 sm:h-8 bg-brand-primary ml-1.5 animate-blink" />
           </motion.div>
 
-          {/* Subtitle description */}
+          {/* Subtitle description (Geist Sans 400 Regular) */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-6 max-w-xl text-body text-base sm:text-lg leading-relaxed mx-auto lg:mx-0"
+            className="mt-6 max-w-xl text-body text-base sm:text-lg font-normal leading-relaxed mx-auto lg:mx-0"
           >
             Software Engineer specializing in Next.js, React, Express.js, and MongoDB. Building scalable web applications, dynamic CMS, and high-performance financial &amp; media platforms.
           </motion.p>

@@ -73,10 +73,10 @@ export default function ContactSection() {
 
           {/* Solid Information Panel (Zero Gradients) */}
           <div className="hidden lg:block p-6 rounded-2xl bg-surface border border-border-subtle space-y-3">
-            <h4 className="font-heading font-bold text-text-heading text-sm uppercase tracking-wider">
+            <h4 className="font-heading font-semibold text-text-heading text-sm uppercase tracking-wider">
               Project Consultation
             </h4>
-            <p className="text-xs text-text-body leading-relaxed">
+            <p className="text-xs text-text-body font-normal leading-relaxed">
               Available for full-stack web applications, TypeScript architecture, and specialized Next.js contract roles. All inquiries receive direct attention from the engineer.
             </p>
           </div>
@@ -99,8 +99,8 @@ export default function ContactSection() {
                 <div className="w-16 h-16 rounded-full bg-color-success/10 border border-color-success/30 flex items-center justify-center mb-4">
                   <CheckCircle className="h-8 w-8 text-color-success" />
                 </div>
-                <h3 className="text-xl font-heading font-bold text-text-heading">Thank you!</h3>
-                <p className="text-text-body mt-2 text-sm">
+                <h3 className="text-xl font-heading font-semibold tracking-tight text-text-heading">Thank you!</h3>
+                <p className="text-text-body font-normal mt-2 text-sm leading-relaxed">
                   Your message has been sent. I&apos;ll get back to you within 24 hours!
                 </p>
               </motion.div>

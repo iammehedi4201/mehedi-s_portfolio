@@ -45,7 +45,7 @@ export default function Sidebar({
       {/* Header */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-border-subtle">
         {!collapsed && (
-          <Link href="/dashboard" className="font-heading text-lg font-bold text-text-heading">
+          <Link href="/dashboard" className="font-heading text-lg font-semibold tracking-tight text-text-heading">
             MH<span className="text-brand-primary">.</span> Admin
           </Link>
         )}

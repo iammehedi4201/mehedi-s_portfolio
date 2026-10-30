@@ -4,6 +4,7 @@
   "primary": "#E5A00D",
   "hover": "#D99404",
   "subtle": "#2B220C",
+  "subtleText": "#FEF08A",
   "onPrimary": "#0A0A0F",
   "hsl": "41 90% 48%",
   "description": "Signature developer amber & safety ochre",
