@@ -53,7 +53,7 @@ export default function Footer() {
 
         {/* Big Highlighted Name — Edge-to-Edge Typography touching bottom edge with zero gap */}
         <div className="pt-2 sm:pt-4 pb-0 px-2 sm:px-3 w-full flex justify-center items-end overflow-hidden relative z-10">
-          <h2 className="font-heading font-bold text-[15.2vw] sm:text-[14.6vw] md:text-[13.8vw] lg:text-[13vw] xl:text-[168px] tracking-tight leading-none text-heading select-none text-center pointer-events-none whitespace-nowrap -mb-[3vw] xl:-mb-[38px] w-full">
+          <h2 className="font-heading font-bold text-[15.2vw] sm:text-[14.6vw] md:text-[13.8vw] lg:text-[13vw] xl:text-[180px] tracking-tight leading-none text-heading select-none text-center pointer-events-none whitespace-nowrap -mb-[3vw] xl:-mb-[22px] w-full">
             Mehedi Hasan
           </h2>
         </div>

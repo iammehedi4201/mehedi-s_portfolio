@@ -108,10 +108,10 @@ export default function AboutSection() {
               Building scalable web apps with <span className="text-brand-primary">clean architecture</span>.
             </h3>
             <p>
-              I am a Software Engineer based in Dhaka, Bangladesh. At <strong>Antopolis</strong>, I developed scalable web applications, dynamic CMS platforms, and admin dashboards using <strong>Next.js, React, Express.js, and MongoDB</strong>.
+              I&apos;m a Software Engineer based in Dhaka, Bangladesh, with professional experience at <strong>Antopolis</strong> building web applications, dynamic CMS platforms, and admin dashboards. I work with <strong>Next.js, React, Express.js, and MongoDB</strong> to develop reliable and maintainable solutions.
             </p>
             <p>
-              I hold a B.Sc. in Computer Science &amp; Engineering from <strong>Daffodil International University</strong> (CGPA: 3.54 / 4.00), focused on clean code, robust APIs, and high performance.
+              I hold a B.Sc. in Computer Science and Engineering from <strong>Daffodil International University</strong>, graduating with a CGPA of 3.54/4.00. I value clean code, well-structured APIs, and building applications that deliver a reliable user experience.
             </p>
           </div>
 
